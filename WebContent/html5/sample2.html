@@ -1,0 +1,60 @@
+<html>
+	<body>
+		当前录制音频：<audio controls autoplay></audio><br>
+		上传之后音频：<audio controls autoplay src="out.wav"></audio>
+		<script type="text/javascript" src="recorder.js"> </script>
+		<br>
+		<input onclick="startRecording()" type="button" value="录制" />
+		<input onclick="stopRecording()" type="button" value="停止" />
+
+		<script>
+			var onFail = function(e) {
+				console.log('Rejected!', e);
+			};
+
+			var onSuccess = function(s) {
+				var context = new webkitAudioContext();
+				var mediaStreamSource = context.createMediaStreamSource(s);
+				recorder = new Recorder(mediaStreamSource);
+				recorder.record();
+
+				// audio loopback
+				// mediaStreamSource.connect(context.destination);
+			}
+
+			window.URL = window.URL || window.webkitURL;
+			navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+			var recorder;
+			var audio = document.querySelector('audio');
+
+			function startRecording() {
+				if (navigator.getUserMedia) {
+					navigator.getUserMedia({audio: true}, onSuccess, onFail);
+				} else {
+					console.log('navigator.getUserMedia not present');
+				}
+			}
+
+			function stopRecording() {
+				recorder.stop();
+				recorder.exportWAV(
+					function(s) {
+						audio.src = window.URL.createObjectURL(s);
+						handleFiles(s);
+					}
+				);
+			}
+			
+		
+			function handleFiles(files) {
+				var xhr = new XMLHttpRequest();  
+				xhr.open("POST", "http://localhost:8080/speechInput/test?fileName=aaaa.wav"); 
+				xhr.overrideMimeType("application/octet-stream"); 
+				//xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+				xhr.responseType="blob";
+				xhr.send(files); 
+			}			
+		</script>
+	</body>
+</html>

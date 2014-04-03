@@ -1,0 +1,36 @@
+<html>
+	<body>
+		<audio controls autoplay></audio>
+
+		<input onclick="startRecording()" type="button" value="start recording" />
+		<input onclick="stopRecording()" type="button" value="stop recording and play" />
+
+		<script>
+			var onFail = function(e) {
+				console.log('Rejected!', e);
+			};
+
+			var onSuccess = function(s) {
+				stream = s;
+			}
+
+			window.URL = window.URL || window.webkitURL;
+			navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+			var stream;
+			var audio = document.querySelector('audio');
+
+			function startRecording() {
+				if (navigator.getUserMedia) {
+					navigator.getUserMedia({audio: true}, onSuccess, onFail);
+				} else {
+					console.log('navigator.getUserMedia not present');
+				}
+			}
+
+			function stopRecording() {
+				audio.src = window.URL.createObjectURL(stream);
+			}
+		</script>
+	</body>
+</html>
