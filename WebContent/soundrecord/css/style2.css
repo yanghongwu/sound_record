@@ -1,0 +1,148 @@
+
+*{
+	padding:0;
+	margin:0;
+}
+BODY {
+	FONT: 12px/1.5 "ËÎÌå"; BACKGROUND: #fff; COLOR: #666
+}
+A {
+	COLOR: #666; TEXT-DECORATION: none
+}
+A:hover {
+	TEXT-DECORATION: underline
+}
+
+
+
+.online_main img{
+	vertical-align:middle;
+}
+.list_one img,.list_two img{
+	margin-right:5px;
+	width:28px;
+	height:28px;
+}
+.list_two img{
+	filter£ºgray; -moz-opacity:.1;opacity:0.1;
+	filter: Alpha(opacity=30);-moz-opacity:.3;opacity:0.3;
+}
+.list_one li,.list_two li{
+	text-align:left;
+}
+
+.float0831 {
+	POSITION: fixed; TOP: 180px; RIGHT: 1px; _position: absolute
+}
+.float0831 A {
+	COLOR: #00a0e9
+}
+.float0831 A:hover {
+	COLOR: #ff8100; TEXT-DECORATION: none
+}
+.float0831 .floatL {
+	POSITION: relative; WIDTH: 28px; FLOAT: left
+}
+.float0831 .floatL A {
+	TEXT-INDENT: -9999px; DISPLAY: block; FONT-SIZE: 0px
+}
+.float0831 .floatR {
+	BACKGROUND: url(../images/float_bg.gif);
+}
+
+.float0831 .tp {
+	BACKGROUND: url(../images/float_bg.gif);
+}
+.float0831 .cn {
+	BACKGROUND: url(../images/float_bg.gif);overflow-y: scroll;
+	height:420px;
+}
+.float0831 .floatR {
+	PADDING-BOTTOM: 15px; WIDTH: 130px; BACKGROUND-REPEAT: no-repeat; BACKGROUND-POSITION: -131px bottom; FLOAT: left;
+}
+.float0831 .tp {
+	BACKGROUND-REPEAT: no-repeat; BACKGROUND-POSITION: 0% 0%; HEIGHT: 10px
+}
+.float0831 .cn {
+	BACKGROUND-REPEAT: repeat-y; BACKGROUND-POSITION: -262px 0px
+}
+.float0831 .cn H3 {
+	TEXT-INDENT: -9999px; HEIGHT: 36px; FONT-SIZE: 0px
+}
+.float0831 .cn UL {
+	margin:0 5px 0 10px; 
+	text-align:justify;
+}
+.float0831 .cn UL LI {
+	BORDER-BOTTOM: #e6e5e4 1px solid; LINE-HEIGHT: 36px; WORD-WRAP: break-word; HEIGHT: 36px; OVERFLOW: hidden; WORD-BREAK: normal
+}
+.online_main  .L1 a {
+	font-weight:600;
+}
+.online_main  .L1 span{
+	color:#eb7312;
+}
+.float0831 .titZx {
+	BACKGROUND: url(../images/float_s.gif) no-repeat;
+
+}
+
+
+
+
+
+.float0831 .btnOpen {
+	BACKGROUND: url(../images/float_s.gif) no-repeat;
+
+}
+.float0831 .btnOpen_n {
+	BACKGROUND: url(../images/float_s.gif) no-repeat;
+
+}
+.float0831 .btnCtn {
+	BACKGROUND: url(../images/float_s.gif) no-repeat;
+
+}
+.float0831 .titZx {
+	BACKGROUND-POSITION: 5px -10px
+}
+
+.float0831 .btnOpen {
+	BACKGROUND-POSITION: -30px -396px
+}
+.float0831 .btnOpen_n {
+	BACKGROUND-POSITION: 0px -530px
+}
+.float0831 .btnCtn {
+	BACKGROUND-POSITION: 0px -396px
+}
+
+
+
+.float0831 .btnOpen {
+	POSITION: relative; WIDTH: 28px; HEIGHT: 118px; TOP: 80px; LEFT: 2px
+}
+.float0831 .btnOpen_n {
+	POSITION: relative; WIDTH: 28px; HEIGHT: 118px; TOP: 80px; LEFT: 2px
+}
+.float0831 .btnCtn {
+	POSITION: relative; WIDTH: 28px; HEIGHT: 118px; TOP: 80px; LEFT: 2px
+}
+.float0831 .btnOpen {
+	TOP: 118px; LEFT: 1px
+}
+.float0831 .btnOpen_n {
+	TOP: 118px; LEFT: 1px
+}
+.float0831 .btnCtn {
+	TOP: 118px; LEFT: 2px
+}
+.float0831 UL LI H3.titDc A {
+	WIDTH: 80px; DISPLAY: block; HEIGHT: 36px
+}
+.float0831 UL LI.top {
+	BORDER-BOTTOM: #ace5f9 1px solid
+}
+.float0831 UL LI.bot {
+	BORDER-BOTTOM-STYLE: none
+}

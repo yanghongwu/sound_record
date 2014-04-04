@@ -1,0 +1,564 @@
+@charset "utf-8";
+/* CSS Document */
+
+* {
+	padding:0;
+	margin:0;
+}
+.ie6fixedTL{position:fixed;left:0;top:0}
+.ie6fixedBR{position:fixed;right:0;bottom:0}
+/* IE6浏览器的特有方法 */
+* html .ie6fixedTL{position:absolute;left:expression(eval(document.documentElement.scrollLeft));top:expression(eval(document.documentElement.scrollTop))}
+* html .ie6fixedBR{position:absolute;left:expression(eval(document.documentElement.scrollLeft+document.documentElement.clientWidth-this.offsetWidth)-(parseInt(this.currentStyle.marginLeft,10)||0)-(parseInt(this.currentStyle.marginRight,10)||0));top:expression(eval(document.documentElement.scrollTop+document.documentElement.clientHeight-this.offsetHeight-(parseInt(this.currentStyle.marginTop,10)||0)-(parseInt(this.currentStyle.marginBottom,10)||0)))} 
+body {
+	_background-image: url(about:blank);       /*用浏览器空白页面作为背景*/
+	_background-attachment: fixed;   
+	position:relative;/* prevent screen flash in IE6 确保滚动条滚动时，元素不闪动*/
+	background:url(../images/login/bg.jpg) repeat-x #feffff;
+	font-family:sans-serif, "微软雅黑", "幼圆";
+	font-size:12px;
+	}
+.wrapper{
+	background:url(../images/login/cloud_bg.png)  center  20px no-repeat;
+}
+.wrapper2{
+	background:url(../images/login/enter_bg.jpg) repeat;
+	min-height:880px;
+	height:auto;
+	_height:900px;
+}
+.login-form dl.pwd .pwdtip, .login-form dl.top .nametip {
+    background: none repeat scroll 0 0 transparent;
+    color: #888888;
+    cursor: text;
+    font-size: 14px;
+    font-weight: normal;
+    left: 30px;
+    position: absolute;
+    text-indent: 0;
+    top: 7px;
+    visibility: visible;
+    width: 100px;
+}
+	
+	
+a{
+	text-decoration:none;
+}
+ol, ul{
+	list-style: none;
+}
+img {
+	border:none;
+}
+.right {
+	float:right;
+}
+.left {
+	float:left;
+}
+.center {
+	text-align:center;
+}
+.clear {
+	clear:both;
+}
+.content_right,.content_left {
+	-moz-border-radius: 5px;
+	-webkit-border-radius:5px;
+	border-radius: 5px;
+	border-radius: 5px 5px 5px 5px;
+}
+.header{
+	background:url(../images/login/top_bg.jpg) repeat-x;
+	height:61px;
+	margin-bottom:30px;
+}
+.navigation-wrapper {
+	margin: 0 auto;
+	width: 1000px;
+	background:url(../images/login/logo.jpg) left top no-repeat;
+	height:61px;
+}
+.clearx{
+	margin-left:220px;
+	height:61px;
+	line-height:61px;
+}
+.clearx h2{font-family:"幼圆", "黑体"; 
+	font-size:18px;
+	color:#fff;
+	letter-spacing:2px;
+}
+.clearx a{
+	font-size:11px;
+	padding-right:20px;
+	color:#fff;
+}
+.clearx a span{
+	font-size:16px;
+}
+.delx_top {
+    background: url(../images/login/wodelx_20120422_bg_top.png) no-repeat scroll 0 0 transparent;
+    height: 20px;
+    width: 1000px;
+}	
+
+.wodelx_end {
+    background: url(../images/login/wodelx_20120422_bg_end.png) no-repeat scroll 0 0 transparent;
+    height: 20px;
+    width: 1000px;
+}
+.container {
+	margin:0 auto;
+	width:1000px;
+	_height:930px;
+	background-attachment:fixed;
+}
+.content{
+	width:1000px;
+	height:710px;
+	background:url(../images/login/wodelx_20120422_bg.png) repeat-y;
+	padding-top:10px;
+}
+.contact h1{
+	text-indent:36px;
+	height:55px;
+	display:block;
+}
+.contact h2{
+	padding-top:80px;
+	color:#8d9f24;
+	text-align:center;
+	
+}
+
+.contact a{
+	font-size:25px;
+	vertical-align:middle;
+}
+.content_right{
+	width:627px;
+	height:562px;
+	background-color:#FFF;
+	border: #c7dde5 solid 1px;
+	margin-right:27px;
+	_margin-right:22px;
+	padding:42px 15px;
+	}
+.content_right .banner{
+	background:url(../images/login/banner_bg.jpg) center no-repeat;
+	height:150px;
+	margin-bottom:40px;
+	padding:15px;
+}
+.login_name{
+	width:15px;
+	height:15px;
+	background:url(../images/login/ico.png) 0 -88px no-repeat;
+	z-index:2;
+}
+
+.right_info{
+	height:328px;
+}
+.info_zujuan,.info_coruse{
+	height:148px;
+	width:300px;
+	margin-bottom:30px;
+}
+.info_ziyuan,.info_chengji{
+	height:148px;
+	width:300px;
+	margin-bottom:30px;
+}
+
+.content_left{
+	margin:20px 27px 20px;
+	_margin-left:22px;
+	width:267px;
+	height:608px;
+	background-color:#ecf7fb;
+	
+}
+.login-form {
+    padding: 35px 23px 35px 23px;
+}
+.login-form dl.top dd {
+	background: url(../images/login/ico.png) no-repeat scroll 7px -80px #FFFFFF;
+	border: 1px solid #ADB6C9;
+	border-radius: 3px 3px 3px 3px;
+	box-shadow: 0 0 1px #FFFFFF;
+	height: 32px;
+	padding: 1px;
+	position: relative;
+	width: 220px;
+	margin-bottom:15px;
+}
+.login-form dl.pwd dd {
+	background: url(../images/login/ico.png) no-repeat scroll 7px -110px #FFFFFF;
+	border: 1px solid #ADB6C9;
+	border-radius: 3px 3px 3px 3px;
+	box-shadow: 0 0 1px #FFFFFF;
+	height: 32px;
+	padding: 1px;
+	position: relative;
+	width: 220px;
+	margin-bottom:15px;
+}
+.login-form dl {
+    line-height: 20px;
+	position:relative;
+}
+
+.clearfix:after, .feed:after, .feed-content .headline:after, .comment:after {
+    clear: both;
+    height: 0;
+    visibility: hidden;
+}
+.login-form .input-text {
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    font-size: 14px;
+    height: 32px;
+    line-height: 32px;
+    margin: 0 0 0 30px;
+    padding: 0;
+    width: 190px;
+}
+
+.login-form .labelCheckbox {
+    color: #333333;
+    float: left;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 27px;
+}
+
+.login-form .labelCheckbox input {
+    margin-right: 5px;
+    width: 13px;
+}
+label select, label input, label textarea {
+    vertical-align: middle;
+}
+
+.login-form .getpassword {
+    float: right;
+    margin-top: 3px;
+}
+.login-btn {
+	margin:10px 0;
+	display:block; 
+    background:url(../images/login/btn.png) no-repeat  scroll 0 0 transparent;
+	border:0px;
+    cursor: pointer;
+    height: 49px;
+    text-indent: -9999em;
+    width: 221px;
+	clear:left;
+}
+.login-btn2 {
+	display:block;
+    background: url(../images/login/btn2.png) no-repeat  scroll 0 0 transparent;
+	border: none;
+    cursor: pointer;
+    height: 49px;
+    text-indent: -9999em;
+    width: 221px;
+}
+.login-btn3 {
+	display:block;
+    background: url(../images/login/btn3.png) no-repeat;
+	border: none;
+    cursor: pointer;
+    height: 49px;
+    text-indent: -9999em;
+    width: 221px;
+}
+.right_info h2{
+	font-size:18px;
+	color:#307b93;
+	margin-bottom:5px;
+}
+.info_line{
+	background:url(../images/login/info_line.jpg) no-repeat;
+	height:4px;
+	width:300px;
+}
+.icon_zujuan{
+	float:left;
+	margin-top:10px;
+	display:block;
+	width:110px;
+	height:110px;
+	background:url(../images/login/info_icon.png) no-repeat;
+}
+.icon_ketang{
+	float:left;
+	margin-top:10px;
+	display:block;
+	width:110px;
+	height:110px;
+	background:url(../images/login/info_icon.png) -117px 0 no-repeat;
+	}
+.icon_ziyuan{
+	float:left;
+	margin-top:10px;
+	display:block;
+	width:110px;
+	height:110px;
+	background:url(../images/login/info_icon.png) 0 -117px  no-repeat;
+	}	
+.icon_chengji{
+	float:left;
+	margin-top:10px;
+	display:block;
+	width:110px;
+	height:110px;
+	background:url(../images/login/info_icon.png) -117px -117px  no-repeat;
+	}
+.info_content ul{
+	display:block;
+	padding:10px 0 0 150px;
+	font-size:14px;
+	color:#7d8182;
+	line-height:27px;
+	vertical-align:middle;
+}
+.info_content li{
+	list-style-image:url(../images/login/info_list.png)
+}
+
+/*enter*/
+.enter_title{
+	font-size:20px;
+	color:#7b7b7b;
+	font-weight:600;
+	text-align:center;
+	line-height:35px;
+	margin-bottom:50px;
+}
+.enter_beike{
+	margin-left:30px;
+	background:url(../images/login/enter_beike_bg.png) no-repeat;
+	height:298px;
+	width:411px;
+}
+.enter_ketang{
+	background:url(../images/login/enter_ketang_bg.png) no-repeat;
+	height:298px;
+	width:411px;
+	margin-right:30px;
+}
+.select_title{
+	font-size:30px;
+	text-align:center;
+	color:#8db4d2;
+	padding-top:120px;
+	font: "幼圆", "黑体";
+}
+.select_button{
+	height:46px;
+	margin-top:50px;
+	text-align:center;
+	padding:0 135px;
+}
+.select_button .btn{
+	background: url(../images/login/beike_button.png) no-repeat scroll 0 0 transparent;
+	cursor: pointer;
+	color:#fff;
+	float: left;
+	font-weight:bold;
+	height: 46px;
+	line-height: 46px;
+	width:146px;
+	outline: 0 none;
+	text-align:center;
+	margin:0 auto;
+	font-size:18px;
+	border: 0 none;
+	cursor: pointer;
+	display: block;
+}
+.footer {
+	padding-top:10px;
+	width:1014px;
+	height:40px;
+	background:url(../images/footer_bg.png) no-repeat bottom;
+	position:relative;
+	left:-5px;
+	font-size:12px;
+	margin:0 auto;
+}
+.footer p {
+	color:#646464;
+	line-height:18px;
+	text-align:left;
+	padding-left:380px;
+}
+/*forget8*/
+.psw{
+	padding:100px 0 65px 280px;
+	background:url(../images/login/title_psw.png) no-repeat center top;
+}
+.main_form {
+    padding: 10px 0;
+}
+.main_form li {
+    clear: left;
+    line-height: 230%;
+    padding: 6px 0;
+}
+
+.fm_left {
+    float: left;
+    padding-right: 10px;
+    text-align: right;
+    width: 130px;
+	font: 14px/200% Arial,"宋体";
+}
+
+.fm_right {
+    float: left;
+}
+
+.suggest_box {
+    color: #010101;
+    display: inline-block;
+    font-size: 14px;
+    position: relative;
+}
+
+.input, .input_err, .input_ok, .input_on {
+    background: none repeat scroll 0 0 #F9F9F9;
+    border: 1px solid #C4C4C4;
+    height: 23px;
+    padding: 3px 0 0 3px;
+    width: 221px;
+}
+.err{
+	color:#e41d1d;
+}
+.p_t_5 {
+    padding-top: 5px;
+}
+.info {
+    color: #999999;
+    font-size: 12px;
+    line-height: 22px;
+}
+fieldset, img {
+    border: medium none;
+}
+.btnback {
+	background: url(../images/bg_button_back.jpg) repeat-x top !important;
+	font-size: 12px;
+	border: 1px solid #c8c8c8;
+!important;
+	color: #787878;
+	padding: 5px 5px;
+	border: 1px solid #c8c8c8;
+	font-weight: 700;
+	width:60px;
+	margin:0px 0 0 140px;
+}
+.btnalt {
+	background: url(../images/bg_buttons_alternative.jpg) repeat-x top !important;
+	border: 1px solid #498bb5;
+!important;
+	color: #fff;
+	padding: 5px 5px;
+	border: 1px solid #498bb5;
+	font-weight: 700;
+	width:60px;
+	 display: inline-block;
+    font-size: 12px;
+	width:123px;
+}
+.btnalt:hover {
+	background:url(../images/bg_buttons_alternative.jpg) 0 -36px !important;
+	border: 1px solid #498bb5 !important;
+	cursor: pointer;
+}
+.btnback:hover {
+	background:url(../images/bg_button_back.jpg) 0 -36px !important;
+	border: 1px solid #c8c8c8 !important;
+	cursor: pointer;
+}
+
+/*advise*/
+.rightNav{
+	width:800px;
+	margin:0 auto;
+	height:auto;
+}
+.contact h1{
+	font-size:18px;
+	color:#2b6298;
+	margin-bottom:10px;
+	border-bottom:1px dashed #9fa0a0;
+	padding-bottom:5px
+}
+.link_list .contact p{
+	margin-top:18px;
+	font-size:16px;
+	vertical-align:top;
+	}
+.contact label{
+	vertical-align:top; 
+	display:block; 
+	float:left;
+}
+.contact_btn .btn{
+	background: url(../images/bg_buttons.jpg) repeat-x scroll 0 0 transparent;
+	cursor: pointer;
+	color:#fff;
+	height:30px;
+	line-height: 30px;
+	width:124px;
+	border: #889927 1px solid;
+	font-size:18px;
+	font-weight:600;
+	cursor: pointer;
+}
+
+.contact_btn .btn_back{
+	background: url(../images/bg_button_back.jpg) repeat-x scroll 0 0 transparent;
+	border: 1px #d4d4d4 solid;
+	color: #787878;
+	cursor: pointer;
+	height:30px;
+	line-height: 30px;
+	width:124px;
+	font-size:18px;
+	font-weight:600;
+}
+.contact_btn{
+	text-align:center;
+	margin-top:40px;
+}
+
+.link_list .contact input{
+	height:22px;
+	width:207px;
+	margin-right:70px;
+}
+.contact input,.contact textarea{ 
+    background:#f8f8f8;
+	border:#ccc solid 1px;
+	padding:2px;
+}
+.contact label{
+	vertical-align:top; 
+	display:block; 
+	float:left;
+}
+.login-form dl.bottom{
+	position:static;
+	width:100%;
+	margin-top:10px
+}
+.fm_left em{
+	color:#c33	
+}

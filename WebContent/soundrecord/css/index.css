@@ -1,0 +1,516 @@
+/* CSS Document */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin:0;
+  padding:0;
+  border:0;
+  font-size:100%;
+  font: inherit;
+  vertical-align:baseline;
+  outline: none;
+  box-sizing: border-box
+}
+body {font-size:12px;line-height:1;font-family:Arial,"Microsoft Yahei";color:#444 }
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {display: block}
+ol, ul { list-style: none; }
+blockquote, q { quotes: none; }
+blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none}
+strong {font-weight: bold; } 
+table { border-collapse: collapse; border-spacing: 0}
+img {border: 0}
+.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden;font-size:0}
+.clearfix {zoom:1}
+.clear{clear:both;height:0;line-height:0;font-size:0}
+.cl{clear:both}
+.tl{text-align:left}
+.tr{text-align:right}
+.tc{text-align:center}
+.fl{float:left}
+.fr{float:right}
+.dis{display:none}
+.bold{font-weight:bold}
+.red{color:#f00}
+.red_c3{color:#c33}
+.mb15{margin-bottom:15px}
+.mt20{margin-top:20px}
+a:link,a:visited{color:#006b99;text-decoration:none}
+a:hover,a:active{color:#c60;text-decoration:none;transition:all 0.2s}
+.btn01,.btn02{
+	padding:10px 25px;
+	color:#fff;
+	text-align:center;
+	border:0;
+	border-radius:3px;
+	cursor:pointer;
+	font-family:"Microsoft Yahei";
+	font-size:14px
+}
+.btn01{background:#2bbade}
+.btn01:hover{background:#41d2f6;transition:all 0.2s}
+.btn02{background:#a1bca8}
+.btn02:hover{background:#afcbb6;transition:all 0.2s}
+/*header*/
+.header {
+	width:100%;
+	height:151px;
+	background:url(../images/index/headerbg.jpg) repeat-x	
+}
+.headerIn{
+	width:1000px;
+	margin:0 auto	
+}
+.headerLink{
+	text-align:right;
+	line-height:31px	
+}
+.headerLink a{margin:0 8px}
+.headerLogo{
+	width:460px;
+	height:80px;
+	float:left;
+	background:url(../images/index/logo.jpg) no-repeat	
+}
+.headerInteration{
+	float:right;
+	width:450px;
+	padding-top:30px
+}
+.headerInteration span{
+	padding-top:30px;
+	height:0;
+	overflow:hidden;
+	display:inline-block;
+	float:right
+}
+.headerTel{
+	width:212px;
+	background:url(../images/index/tel.jpg) no-repeat
+}
+.headerFeedback{
+	width:114px;
+	margin-left:20px;
+	cursor:pointer;
+	background:url(../images/index/feedback.jpg) no-repeat
+}
+.nav li{
+	float:left;
+	margin-left:25px;
+	line-height:40px;
+	font-size:15px
+}
+.nav li a{
+	padding:3px 10px;
+	border-radius:4px;
+	font-weight:bold;
+	transition:all 0.2s
+}
+.nav li a:link,.nav li a:visited{
+	color:#fff;
+	text-decoration:none	
+}
+.nav li a:hover,.nav li a:active{
+	background:#fff;
+	text-decoration:none;
+	color:#006b99	
+}
+.nav li.current a:link,.nav li.current a:visited{
+	background:#fff;
+	color:#006b99	
+}
+/*main*/
+.main{
+	width:1000px;
+	margin:20px auto	
+}
+.layout{}
+.focus{
+	width:660px;
+	float:left
+}
+/* focus */
+#focus{width:660px;height:280px;overflow:hidden;position:relative;}
+#focus ul{height:380px;position:absolute;}
+#focus ul li{float:left;width:660px;height:280px;overflow:hidden;position:relative;background:#000;}
+#focus ul li div{position:absolute;overflow:hidden;}
+#focus .btnBg{position:absolute;width:660px;height:20px;left:0;bottom:0;background:#000;}
+#focus .btn{position:absolute;width:640px;height:10px;padding:5px 10px;right:0;top:260px;text-align:right}
+#focus .btn span{display:inline-block;_display:inline;_zoom:1;width:25px;height:10px;_font-size:0;margin-left:5px;cursor:pointer;background:#fff;}
+#focus .btn span.on{background:#fff;}
+#focus .preNext{width:45px;height:100px;position:absolute;top:90px;background:url(../images/index/sprite.png) no-repeat 0 0;cursor:pointer;}
+#focus .pre{left:0;}
+#focus .next{right:0;background-position:right top}
+/*login*/
+.loginNav{
+	width:323px;
+	height:280px;
+	float:right;
+	border:1px solid #c3e0eb;
+	background:#def7fc
+}
+.login{
+	padding:15px	
+}
+.login li .input{
+	width:243px;
+	height:46px;
+	background:url(../images/index/loginicon.png) no-repeat;
+	border:1px solid #ccc;
+	border-radius:5px;
+	margin-bottom:20px;
+	padding-left:50px;
+	font:bold 16px/46px Tahoma;
+	color:#888
+}
+.login li .input:focus{
+	border:1px solid #72abc0;
+	transition:all 0.2s
+}
+.login li .username{
+	background-position:0 0
+}
+.login li .psw{
+	background-position:0 -51px
+}
+.login li .select,.login li .selected{
+	background:url(../images/index/loginSelect.png) no-repeat;
+	padding:5px 0 5px 23px;
+	display:inlind-block;
+	height:18px;
+	cursor:default;
+	margin-right:10px
+}
+.login li .select{background-position:0 -19px}
+.login li .selected{background-position:0 2px}
+.login li.errorInfo{
+	color:#f00;
+	text-align:center;
+	height:20px	
+}
+.login li .label{margin-right:10px}
+.login li .label input{vertical-align:middle}
+.login li .btn{
+	width:295px;
+	line-height:50px;
+	background:#24afe0;
+	border-radius:5px;
+	text-align:center;
+	border:0;
+	cursor:pointer;
+	font-size:15px;
+	font-weight:bold;
+	color:#fff;
+	font-family:"Microsoft Yahei";
+	margin-top:15px
+}
+.login li .btn:hover{background:#2cbef2;transition:all 0.2s}
+.tabsNav{
+	width:660px;
+	float:left
+}
+.tabs li{
+	float:left;
+	border-left:2px solid #888;
+	color:#888;
+	padding-left:8px;
+	margin:0 30px 11px auto;
+	line-height:18px;
+	font-size:14px
+}
+.tabs li.current,.layoutTitle{
+	border-left:6px solid #0293cb;
+	color:#0293cb	
+}
+.tabs li a{color:#888}
+.tabs li.current a{color:#0293cb}
+.staffList li{
+	float:left;
+	width:80px;
+	height:90px;
+	text-align:center;
+	margin:10px 0 0
+}
+.cooperation ul li{
+	float:left;
+	width:150px;
+	height:90px;
+	text-align:center;
+	margin:10px 0 0
+}
+.staffList li img,.cooperation ul li img{
+	margin-bottom:8px;
+	vertical-align:middle
+}
+.layoutTitle{
+	margin-bottom:15px;
+	padding-left:8px;
+	font-size:14px
+}
+.cooperation{
+	float:right;
+	width:325px	
+}
+.notice {
+	width:325px;
+	float:left
+}
+.notice li{
+	background:url(../images/index/arrow.png) no-repeat left 7px;
+	padding-left:15px;
+	line-height:24px;
+	border-bottom:1px dotted #ddd	
+}
+.notice li span{
+	float:right;
+	color:#999	
+}
+.diploma {
+	width:620px;
+	float:right	
+}
+.diploma li {
+	float:left;
+	width:205px;
+	text-align:center
+}
+.diploma li img{
+	margin-bottom:12px	
+}
+/*footer*/
+.footer {
+	width:100%;
+	margin-top:20px;
+	border-top:1px solid #ddd;
+	background:#f5f5f5;
+	text-align:center
+}
+.footerIn{
+	width:1000px;
+	margin:0 auto;
+	border-top:1px solid #fff;
+	padding:30px 0;
+	line-height:30px
+}
+.smallLogo{
+	display:inline-block;
+	position:relative;
+	top:8px;
+	width:30px;
+	height:26px;
+	background:url(../images/index/small_logo.jpg) no-repeat;
+	margin-right:8px	
+}
+/**/
+.identity{
+	text-align:center;
+	padding:40px 0	
+}
+.identity a{
+	width:100px;
+	height:100px;
+	display:inline-block;
+	color:#eee;
+	border-radius:3px;
+	font:bold 15px "Microsoft Yahei";
+	background:url(../images/index/identity.png) no-repeat;
+	transition:all 0.2s
+}
+.identity a.teacher{background-position:0 0}
+.identity a.teacher:hover{background-position:0 -100px}
+.identity a.student{background-position:-100px 0}
+.identity a.student:hover{background-position:-100px -100px}
+.identity a p{margin-top:70px}
+.leftShow{
+	width:330px;
+	height:590px;
+	float:left	
+}
+.leftRegT{background:url(../images/index/regteacher.jpg) no-repeat center 50px}
+.leftRegS{background:url(../images/index/regstudent.jpg) no-repeat center 50px}
+.rightForm{
+	float:right;
+	padding:0 10px 0 50px;
+	background:url(../images/index/line.png) no-repeat left 50px
+}
+.formList{
+	margin:0 auto 0 20px;
+	font-size:14px
+}
+.formList ol{
+	font-size:15px;
+	border-bottom:1px dotted #ddd;
+	margin:50px auto 30px;
+	padding:0 0 10px 12px;
+	color:#888
+}
+.formList li{
+	margin:25px auto;
+	line-height:30px;
+	position:relative
+}
+.formList li .label{
+	display:inline-block;
+	width:80px;
+	text-align:right;
+	margin-right:10px;
+	color:#333;
+	margin-right:15px
+}
+.formList li .label em{
+	color:#c33	
+}
+.formList li .ipt input,.verifyNav input{
+	height:36px;
+	background:url(../images/index/iptbg.png) repeat-x;
+	border:1px solid #ccc;
+	border-radius:5px;
+	font:bold 14px/36px Tahoma;
+	color:#888;
+	text-indent:3px
+}
+.formList li .ipt input:focus{
+	border:1px solid #72abc0;
+	transition:all 0.2s
+}
+.formList li .tip{
+	padding-left:5px;
+	display:inline-block;
+	font-size:12px;
+	width:260px
+}
+.formList li .tip em,.phaseErr em{padding:8px;margin-right:5px}
+.formList li .tiptext span{color:#999}
+.formList li .tiptext em{background:url(../images/index/tiptext.png) no-repeat left}
+.formList li .tiperr span{color:#c33}
+.formList li .tiperr em,.phaseErr .tiperr em{background:url(../images/index/tiperr.png) no-repeat left}
+.formList li .tipok em,.phaseErr .tipok em{background:url(../images/index/tipok.png) no-repeat left}
+.formList li .sex label{margin-right:20px}
+.formList li select{border:1px solid #ddd;font-family:"Microsoft Yahei"}
+.formList li .city span{margin-right:10px}
+.formList li .city select {margin-right:5px}
+.formList li .phase{margin-right:5px}
+.formList li .phaseManage {margin-left:10px	}
+.formList li .phaseManage span{
+	padding-left:20px;
+	cursor:pointer;
+	margin-right:5px;
+	font-size:12px;
+	display:inline-block;
+	color:#006b99
+}
+.formList li .phaseManage span.add{background:url(../images/index/add.png) no-repeat left}
+.formList li .phaseManage span.remove{background:url(../images/index/remove.png) no-repeat left}
+.phaseErr{
+	position:relative;
+	height:0;
+}
+.phaseErr em{margin-right:3px}
+.phaseErr .phaseErrInfo{
+	position:absolute;
+	top:-48px;
+	right:-20px;
+	width:145px;
+	color:#c33	
+}
+.bottomBtn{
+	padding:30px 0;
+	border-top:1px dotted #ddd
+}
+.bottomBtn .btnNav{padding-left:105px}
+.bottomBtn .btnNav button{
+	margin:0 15px;
+	font-size:21px
+}
+.bottomBtn p{margin:30px auto 0 30px;text-align:left}
+.serverText {font-family:"Microsoft Yahei";padding:10px}
+.serverText .welcome{
+	line-height:26px;
+	color:#f90;
+	font-size:14px;
+	margin:0 auto 20px;
+	padding-bottom:10px;
+	border-bottom:1px dotted #ddd	
+}
+.serverText h1{
+	margin:12px auto 5px	
+}
+.serverText h2{
+	margin:12px auto 5px;
+	color:#555	
+}
+.serverText p{
+	line-height:30px;
+	text-indent:24px;
+	font-size:13px;
+	color:#666
+}
+.regOkNav{
+	margin:50px auto 0;
+	width:600px;
+	height:400px	
+}
+.regOkNav h1{
+	padding-left:55px;
+	font-size:22px;
+	height:50px;
+	color:#f98508;
+	line-height:50px;
+	text-align:center
+}
+.regOkNav h1.st1{background:url(../images/index/regok1.png) no-repeat 90px}
+.regOkNav h1.st2{background:url(../images/index/regno.png) no-repeat 150px}
+.regOkNav p.name{
+	font-size:15px;
+	padding-bottom:20px;
+	margin-bottom:20px;
+	border-bottom:dotted #ddd 1px
+}
+.regOkNav p.name em{
+	font-weight:bold;
+	font-style:normal;
+	color:#f98508
+}
+.regOkNav p.mailInfo{
+	margin:15px auto;
+	line-height:30px;
+	font-size:15px;
+	text-align:center
+}
+.regOkNav p.mailInfo .copy{margin-left:10px;font-size:13px}
+.regOkNav p.mailInfo em{
+	font-size:22px;
+	font-weight:bold;
+	font-style:normal;
+	color:#369	
+}
+.regOkNav .mailAgain {
+	margin:15px auto 0;
+	background:#f5f5f5;
+	padding:10px;
+	border:1px solid #ddd;
+	border-radius:3px
+}
+.regOkNav .mailAgain p{line-height:26px}
+.verifyNav{
+	margin:20px auto;
+	padding-top:20px;
+	border-top:1px dotted #ddd	
+}
+.verifyNav p{
+	margin:15px auto
+}
+.verifyNav input{
+	margin-right:10px;
+	color:#444;
+	text-align:center
+}
+.codeInfo{
+	font-size:14px;
+	line-height:30px;
+	padding:30px 0;
+	text-align:center	
+}
+.code{
+	font:bold 21px Tahoma;
+	color:#c33	
+}
+.btnCon{margin:20px auto}
+.btnCon button{margin:0 10px}

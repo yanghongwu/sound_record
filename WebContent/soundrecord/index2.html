@@ -1,0 +1,475 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>风火云教育科技</title>
+<link media="screen" rel="stylesheet" href="css/jquery.ui.theme.css" />
+<link media="screen" rel="stylesheet" href="css/jquery.ui.core.css" />
+<link media="screen" rel="stylesheet" href="css/jquery.ui.dialog.css" />
+<link href="css/layout.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.custom.js"></script>
+<script type="text/javascript" src="js/jquery.smartWizard-2.0.min.js"></script>
+<!--[if IE 6]>
+    <script type="text/javascript" src="js/dd_png.js"></script>
+    <script type="text/javascript">
+    DD_belatedPNG.fix('.pngbj,.box');
+    </script>
+<![endif]-->
+
+<script type="text/javascript" src="swfobject.js"></script>
+<script type="text/javascript">
+
+
+	//上传音频文件需要预设置
+	function soundUploadConfig() {
+		return {
+			"uploadURL" : "../uploadMP3",
+			"uid" : "4",
+			"sign" : "93063902dcfb9086ab87ff725d33b8fa44885114dd163e42ae89c04fc19f8947"
+		};
+	}
+	//上传音频文件把服务器返回的东西给 js 用
+	function soundUploadCallback() {
+		$("#answerVoice").dialog("close");
+		$(".answerVoiceFile").fadeIn();
+	}
+	
+	$(document).ready(function() {
+		
+		// Smart Wizard 	
+		$('#wizard').smartWizard();
+
+		function onFinishCallback() {
+			$('#wizard').smartWizard('showMessage', 'Finish Clicked');
+		}
+	});
+	//-----------------------------录音计时---Strart----------------------------
+	var c=1; 
+	var intervalId;  
+	function startTimer()  
+	{  
+		intervalId = setInterval(function() {
+			$('.recordTime').text(c+"\"");
+			 c=c+1;  
+		}, 1000);				
+	}  
+
+	function stopTimer()  
+	{  
+		clearInterval(intervalId);
+		$('.recordTime').text(c+"\"");
+		c=0;
+	} 
+	
+	
+	//-----------------------------录音计时----End---------------------------
+	$(function() {
+
+		var swfVersionStr = "11.1.0";
+		var xiSwfUrlStr = "playerProductInstall.swf";
+		var flashvars = {};
+		var params = {};
+		params.quality = "high";
+		params.bgcolor = "#ffffff";
+		params.allowscriptaccess = "sameDomain";
+		params.allowfullscreen = "true";
+		var attributes = {};
+		attributes.id = "sound_record";
+		attributes.name = "sound_record";
+		attributes.align = "middle";
+		swfobject.embedSWF("sound_record.swf", "flashContent", "238", "140",
+				swfVersionStr, xiSwfUrlStr, flashvars, params, attributes);
+		swfobject.createCSS("#flashContent", "display:block;text-align:left;height:auto");
+		
+		window.Recorder = {
+				recorder : null,
+				recorderOriginalWidth : 0,
+				recorderOriginalHeight : 0,
+				uploadFormId : null,
+				uploadFieldName : null,
+				isReady : false,
+
+				connect : function(name, attempts) {
+					if (navigator.appName.indexOf("Microsoft") != -1) {
+						Recorder.recorder = window[name];
+					} else {
+						Recorder.recorder = document[name];
+					}
+
+					if (attempts >= 40) {
+						return;
+					}
+
+					// flash app needs time to load and initialize
+					if (Recorder.recorder && Recorder.recorder.init) {
+						Recorder.recorderOriginalWidth = Recorder.recorder.width;
+						Recorder.recorderOriginalHeight = Recorder.recorder.height;
+						if (Recorder.uploadFormId && $) {
+							var frm = $(Recorder.uploadFormId);
+							Recorder.recorder.init(frm.attr('action').toString(),
+									Recorder.uploadFieldName, frm.serializeArray());
+						}
+						return;
+					}
+
+					setTimeout(function() {
+						Recorder.connect(name, attempts + 1);
+					}, 100);
+				},
+
+				playBack : function(name) {
+					Recorder.recorder.playBack(name);
+				},
+				startMicRecording : function() {
+					Recorder.recorder.startMicRecording();
+				},
+				stopMicRecording : function() {
+					Recorder.recorder.stopMicRecording();
+				}
+
+			};
+			
+			Recorder.connect("sound_record", 0);
+			
+		//----------------------------------------------------------------------
+		$("#takeAnswer").dialog({
+			autoOpen : false,
+			resizable : false,
+			modal : true,
+			width : '800px',
+			title : '拍答案'
+		});
+		$("#answerPic").dialog({
+			autoOpen : false,
+			resizable : false,
+			modal : true,
+			width : '500px',
+			title : '图片解答'
+		});
+		$("#answerVoice").dialog({
+			autoOpen : false,
+			resizable : false,
+			modal : true,
+			width : '300px',
+			title : '语音解答'
+		});
+		$('.buttonFinish').click(function() {
+			window.location.href = 'stats_05_1_2.html';
+		})
+		$('.voiceBtn').toggle(function() {
+			Recorder.startMicRecording();
+			$(this).removeClass("micNormal").addClass("micPress");
+			$(".recordTime").fadeIn();
+			$(".voiceRecord").text("结束录音");
+		}, function() {
+			$(this).removeClass("micPress").addClass("micNormal");
+			//$(".recordTime").hide();
+			Recorder.stopMicRecording();
+			$(".voiceRecord").text("开始录音");
+			stopTimer();
+		});
+	});
+</script>
+</head>
+<body>
+	<div class="outwrapper">
+		<div class="wrapper">
+			<div class="topbar">
+				<div class="navigation-wrapper">
+					<img src="images/demo.gif" />
+					<p>丰都实验中学</p>
+
+
+					<ul class="topfix right">
+						<li class="info line"><a href="#"><span></span>首页</a></li>
+						<li class="table line"><a href="#"><span></span>课程表</a></li>
+
+						<li class="password line"><a href="#"><span></span>账户设置</a>
+							<ul>
+								<li><a href="#">个人信息</a></li>
+								<li><a href="#">修改密码</a></li>
+
+							</ul></li>
+						<li class="back_ketang line"><a href="#"><span></span>课堂系统</a></li>
+						<li class="sign_out"><a href="#"><span></span>退出</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="container_out">
+				<div class="container">
+					<div class="wodelx_top"></div>
+					<div class="main_content">
+						<div class="content_right right">
+							<div class="bg">
+								<div class="stats_topinfo" style="border: 0">
+									<ul class="clearfix">
+										<li>
+											<ul>
+												<li><button class="inline btnback" type="button"
+														name="" onclick="location.href='stats_04.html'">返回</button></li>
+											</ul>
+										</li>
+									</ul>
+								</div>
+								<div class="clear"></div>
+								<div class="tryNav">
+									<dl class="format_01">
+										<dt>
+											<p>
+												<img src="images/picTemp.png" />
+											</p>
+										</dt>
+										<div class="statsNote">
+											<div class="statstext">
+												今年6月15日，四川达州城区正南花园附近，65岁的蒋婆婆摔倒在地，造成大腿根部粉碎性骨折，共花去医疗费、护理费等2万余元。
+											</div>
+											<!--voice begin-->
+											<div class="voice_player">
+												<a class="voice_player_inner" href="#"> <span
+													class="before"> </span> <span class="middle"> <span
+														class="speaker speaker_animate"> </span> <span
+														class="time" style="width: 104px;"> <span
+															class="second">23</span> "
+													</span>
+												</span> <span class="after"> </span>
+												</a>
+											</div>
+											<!--voice end-->
+										</div>
+									</dl>
+								</div>
+								<!-- Smart Wizard -->
+								<div id="wizard" class="swMain jcw">
+									<ul>
+										<li><a href="#step-1"> <label class="stepNumber">1.</label>
+												<span class="stepDesc">标记知识点</span>
+										</a></li>
+										<li><a href="#step-2"> <label class="stepNumber">2.</label>
+												<span class="stepDesc">错题解答</span>
+										</a></li>
+										<li><a href="#step-3"> <label class="stepNumber">3.</label>
+												<span class="stepDesc">布置作业</span>
+										</a></li>
+									</ul>
+									<div id="step-1" style="min-height: 220px">
+										<h2 class="StepTitle">第一步：请为该错题添加包含的知识点。</h2>
+										<div class="kc_step_con">
+											<div class="step1">
+												<div class="step1_1" style="position: relative">
+													<span id="link" class="point steplink">请标记知识点</span>
+													<ul class="node clearfix">
+														<li>第一章</li>
+														<li>第一小节</li>
+														<li>第一章</li>
+														<li>第一小节</li>
+														<li>第一章</li>
+														<li>第一小节</li>
+														<li>第一章</li>
+														<li>第一小节</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div id="step-2" style="min-height: 220px">
+										<h2 class="StepTitle">第二步：对该错题进行解答。</h2>
+										<div class="upAnswer tl">
+											<span class="answerText" onclick="$('.textArea').show();">文字解答</span>
+											<span class="answerVoice"
+												onclick="$('#answerVoice').dialog('open');">语音解答</span> <span
+												class="answerPic" onclick="$('#answerPic').dialog('open');">图片解答</span>
+										</div>
+										<div class="textArea">
+											<div id="t1">
+												<textarea cols="" rows="5"></textarea>
+												<div class="btnNav tr">
+													<button onclick="$('.textArea').hide();" class="btnback">取消</button>
+													<button onclick="$('#t1').hide();$('#t2').show();"
+														class="btn_big">保存</button>
+												</div>
+											</div>
+											<div id="t2" style="display: none">
+												<p>文字答案文字答案文字答案文字答案文字答案文字答案文字答案文字答案文字答案文字答案文字答案字答案文字答案文字答案文字答案文字答案文字答案文字答案文字答案文字答案</p>
+												<div class="btnNav tr">
+													<a href="#" onclick="$('.textArea').hide();return false">删除</a>
+												</div>
+											</div>
+										</div>
+										<div class="answerVoiceFile">
+											<div class="voice_player">
+
+												<object type="application/x-shockwave-flash" data="../disPlay/dewplayer.swf?mp3=FlashRecord.mp3" width="160" height="40" id="dewplayer-mini">
+													<param name="wmode" value="transparent" />
+													<param name="movie" value="../disPlay/dewplayer.swf?mp3=FlashRecord.mp3" />
+												</object>
+												<a class="voice_player_inner" href="#"> <span
+													class="before"> </span> <span class="middle"> <span
+														class="speaker speaker_animate"> </span> <span
+														class="time" style="width: 104px;"> <span
+															class="second">23</span> "
+													</span>
+												</span> <span class="after"> </span>
+												</a> <a href="#" class="voiceDel"
+													onclick="$('.answerVoiceFile').fadeOut();return false">删除</a>
+											</div>
+
+										</div>
+										<div class="answerPicList">
+											<dl>
+												<dd>
+													<img width="121" height="80" src="images/wimg.gif" /><a
+														href="#">删除</a>
+												</dd>
+												<dd>
+													<img width="121" height="80" src="images/wimg.gif" /><a
+														href="#">删除</a>
+												</dd>
+												<dd>
+													<img width="121" height="80" src="images/wimg.gif" /><a
+														href="#">删除</a>
+												</dd>
+												<dd>
+													<img width="121" height="80" src="images/wimg.gif" /><a
+														href="#">删除</a>
+												</dd>
+												<dd>
+													<img width="121" height="80" src="images/wimg.gif" /><a
+														href="#">删除</a>
+												</dd>
+												<dd>
+													<img width="121" height="80" src="images/wimg.gif" /><a
+														href="#">删除</a>
+												</dd>
+											</dl>
+										</div>
+									</div>
+									<div id="step-3" style="height: 220px">
+										<h2 class="StepTitle">第三步：为学生布置有针对性的错题作业。</h2>
+										<div class="kc_step_con elist_btn">
+											<ul class="kc_elist">
+												<li>
+													<!--span class="kc_del">删除</span-->错题作业
+												</li>
+											</ul>
+											<p class="tc">
+												<button class="btnalt mt20" style="width: 220px">去题库组织错题作业&raquo;</button>
+												<button class="btnDisbled mt20" style="width: 220px">去题库组织错题作业&raquo;</button>
+											</p>
+										</div>
+									</div>
+								</div>
+								<!-- End SmartWizard Content -->
+							</div>
+
+
+
+						</div>
+						<div class="content_left">
+							<div class="user_info">
+								<a class="user"><a class="user"><img
+										src="images/student1.jpg" alt="" /></a></a><a class="user_name">张老师</a>
+								<a class="user_subject">科目：数学</a> <a class="user_class">年级：高三</a>
+								<div class="left modi">
+									<button class="btn" value="" name="" type="submit">修改头像</button>
+								</div>
+							</div>
+							<div id="site-menu-nav" class="site-menu">
+								<div class="fhy-menu-item">
+									<div class="item-kecheng selected ">
+										<a href="#"><img class="icon"
+											src="images/icon_coruse.png" />我的课程</a><a id="count"></a>
+									</div>
+								</div>
+								<div class="fhy-menu-item">
+									<div class="item-title ">
+										<a href="#"><span><img class="icon"
+												src="images/icon_ziliao.png" /></span>我的资料 </a><a id="count"></a>
+									</div>
+								</div>
+								<div class="fhy-menu-item">
+									<div class="item-title">
+										<a href="#"><img class="icon" src="images/icon_zuoye.png" />我的作业</a>
+										<a id="count"></a>
+									</div>
+								</div>
+								<div class="fhy-menu-item">
+									<div class="item-title">
+										<a href="#"><img class="icon" src="images/icon_shiti.png" />我的试题</a>
+									</div>
+								</div>
+								<div class="fhy-menu-item">
+									<div class="item-title">
+										<a href="#"><img class="icon" src="images/icon_set.png" />教材设置</a>
+									</div>
+								</div>
+								<div class="fhy-menu-item">
+									<div class="item-title">
+										<a href="#"><img class="icon" src="images/icon_class.png" />我的班级</a>
+									</div>
+								</div>
+								<div class="fhy-menu-item">
+									<div class="item-title">
+										<a href="#"><img src="images/icon_stats.png" class="icon" />错题统计</a>
+									</div>
+								</div>
+								<div></div>
+
+							</div>
+						</div>
+						<div class="clear"></div>
+						<div class="footer">
+							<p>
+								北京风火云教育科技有限公司&nbsp;&nbsp;&nbsp;&nbsp;<a href="advise.html">给我们提建议</a>
+							</p>
+							<P>京ICP备12037317号&nbsp;&nbsp; Copyright © icloud-edu.com, All
+								Rights Reserved</P>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--图片上传 begin-->
+	<div id="answerPic">
+		<div class="update_wendang">
+			<div class="left_dis">
+				<label>选择文件</label> <input class="upbtn" type="file" id="uploader" />
+			</div>
+			<div class="update_miaoshu" style="margin: 10px 0 0 45px;">
+				<dt>
+					<strong>允许上传的文档类型有：</strong>
+				</dt>
+				<dl>图片：jpg、png、gif
+				</dl>
+				<dt>
+					<strong>单个文件不能超过5M</strong>
+				</dt>
+			</div>
+			<div class="tc" style="margin-top: 15px">
+				<button class="btnalt"
+					onclick="$('#answerPic').dialog('close');$('.answerPicList').show();">上传</button>
+			</div>
+		</div>
+	</div>
+	<!--图片上传 end-->
+	<!--语音解答 begin-->
+	<div id="answerVoice">
+		<div class="voiceBtn micNormal">
+			<div class="recordTime">
+				<span>0</span>"
+			</div>
+			<p class="voiceRecord">开始录音</p>
+		</div>
+			<div id="flashContent">
+			<p>To view this page ensure that Adobe Flash Player version
+				11.1.0 or greater is installed.</p>
+		</div>
+
+		<div class="voiceRemind">注：录音时长不超过3分钟！</div>
+	</div>
+	<!--语音解答 end-->
+</body>
+
+
+</html>

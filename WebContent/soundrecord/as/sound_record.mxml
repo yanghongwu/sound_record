@@ -11,6 +11,7 @@
 			import com.hurlant.util.Base64;
 			
 			import flash.events.SampleDataEvent;
+			import flash.events.ActivityEvent;
 			import flash.external.ExternalInterface;
 			import flash.media.Microphone;
 			import flash.media.Sound;
@@ -36,6 +37,9 @@
 				microphoneList = Microphone.names;
 				
 				setupMicrophone(); //自动选择第一个音频硬件
+				
+				ExternalInterface.addCallback("startMicRecording", startMicRecording);
+				ExternalInterface.addCallback("stopMicRecording", stopMicRecording);
 			}
 			
 			/**
@@ -81,18 +85,18 @@
 				microphone.setSilenceLevel(0,0);
 				microphone.gain=50;
 				
-				startRecordBTN.visible = true;
-				stopRecordBTN.visible = false;
+				//startRecordBTN.visible = true;
+				//stopRecordBTN.visible = false;
 			}
 			
 			/**
 			 * 开始录音
 			 * 
 			 * */
-			protected function startMicRecording():void
+			public function startMicRecording():void
 			{	
-				startRecordBTN.visible = false;
-				stopRecordBTN.visible = true;
+				//startRecordBTN.visible = false;
+				//stopRecordBTN.visible = true;
 				
 				starPlayBTN.enabled = false;
 				uploadBTN.enabled = false;
@@ -107,17 +111,25 @@
 				outputSnd = new Sound(); 
 				outputSnd.addEventListener(SampleDataEvent.SAMPLE_DATA, processSound);
 				sChannel = outputSnd.play();
+				
+				microphone.addEventListener(ActivityEvent.ACTIVITY,microphoneActivity);
 
+			}
+			public function microphoneActivity(e:ActivityEvent):void
+			{
+				if(e.activating){
+					ExternalInterface.call("startTimer");
+				}
 			}
 			
 			/**
 			 * 停止录音
 			 * 
 			 * */
-			protected function stopMicRecording():void
+			public function stopMicRecording():void
 			{
-				startRecordBTN.visible = true;
-				stopRecordBTN.visible = false;
+				//startRecordBTN.visible = true;
+				//stopRecordBTN.visible = false;
 				
 				starPlayBTN.enabled = true;
 				uploadBTN.enabled = true;
@@ -141,7 +153,7 @@
 					soundRecording.writeFloat(sample);
 					
 					//////////////////////////////////////
-					tips.text = "开始录音：" + String(soundRecording.length);
+					//tips.text = "开始录音：" + String(soundRecording.length);
 				}
 				
 			}
@@ -178,7 +190,7 @@
 				//soundOutput.data.writeBytes(soundRecording);
 				
 				//////////////////////////////////////////
-				tips.text = "播放录音：" + String(soundRecording.bytesAvailable);
+				//tips.text = "播放录音：" + String(soundRecording.bytesAvailable);
 				
 				if(playRecord == false){
 					return;
@@ -204,7 +216,7 @@
 			private function encodeToMP3():void {
 				
 				//////////
-				tips.text = '开始转换临时格式 wav';
+				//tips.text = '开始转换临时格式 wav';
 				
 				var wavWriter:WAVWriter = new WAVWriter();
 				soundRecording.position = 0;
@@ -227,19 +239,18 @@
 			}
 			private function mp3EncodeProgress(event : ProgressEvent) : void {
 				
-				tips.text = "正在转换格式：" + event.bytesLoaded + " : " + event.bytesTotal + "，请稍后。。。";
+				//tips.text = "正在转换格式：" + event.bytesLoaded + " : " + event.bytesTotal + "，请稍后。。。";
 			}
 			
 			private function mp3EncodeError(event : ErrorEvent) : void {
 				
-				tips.text = "Error : " + event.text;
+				//tips.text = "Error : " + event.text;
 			}
 			private function mp3EncodeComplete(event:Event) : void {
 				
 				mp3Encoder.mp3Data.position = 0;
 				
-				tips.text = "转换格式 mp3 成功，长度：" + String(mp3Encoder.mp3Data.length)
-						+ '\n\n开始上传，请稍后。。。';
+				//tips.text = "转换格式 mp3 成功，长度：" + String(mp3Encoder.mp3Data.length) + '\n\n开始上传，请稍后。。。';
 								
 				upload();
 			}
@@ -273,8 +284,8 @@
 				urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
 				urlLoader.addEventListener(Event.COMPLETE, function(event:Event):void{
 					var bytesqq:ByteArray = new ByteArray();
-					tips.text += '\n\n上传成功';
-					ExternalInterface.call("soundUploadCallback", JSON.parse(event.currentTarget.data));
+					//tips.text += '\n\n上传成功';
+					ExternalInterface.call("soundUploadCallback");
 				});
 				urlLoader.load(_request);
 			}
@@ -286,15 +297,15 @@
 	<mx:ComboBox id="comboMicList" x="67" y="63" width="196" dataProvider="{microphoneList}"/>
 	<s:Button x="279" y="63" width="90" label="选择麦克风" click="setupMicrophone()"/>-->
 	
-	<s:Button id="startRecordBTN" buttonMode="true" x="6" y="5" width="70" label="开始录音" click="startMicRecording()" />
-	<s:Button id="stopRecordBTN" visible="false" buttonMode="true" x="6" y="5" width="70" label="停止录音" click="stopMicRecording()"/>
+	<!--<s:Button id="startRecordBTN" buttonMode="true" x="6" y="5" width="70" label="开始录音" click="startMicRecording()" />
+	<s:Button id="stopRecordBTN" visible="false" buttonMode="true" x="6" y="5" width="70" label="停止录音" click="stopMicRecording()"/>-->
 	
-	<s:Button id="starPlayBTN" enabled="false" buttonMode="true" x="84" y="5" width="70" label="播放录音" click="playbackData()"/>
-	<s:Button id="stopPlayBTN" visible="false" buttonMode="true" x="84" y="5" width="70" label="停止播放" click="stopPlaybackData()"/>
+	<s:Button id="starPlayBTN" enabled="false" buttonMode="true" x="60" y="5" width="70" label="回放" click="playbackData()"/>
+	<s:Button id="stopPlayBTN" visible="false" buttonMode="true" x="60" y="5" width="70" label="暂停" click="stopPlaybackData()"/>
 	
-	<s:TextArea x="7" y="34" width="221" id="tips" height="96" />
+	<!--<s:TextArea x="7" y="34" width="221" id="tips" height="70" />-->
 	
-	<s:Button id="uploadBTN" enabled="false" buttonMode="true" x="161" y="5" width="70" label="上传" chromeColor="#8CD0FF" click="encodeToMP3()"
+	<s:Button id="uploadBTN" enabled="false" buttonMode="true" x="161" y="5" width="70" label="保存" chromeColor="#8CD0FF" click="encodeToMP3()"
 			  color="#000000"/>
 	
 	<!--

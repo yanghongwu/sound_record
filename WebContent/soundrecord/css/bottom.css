@@ -1,0 +1,126 @@
+#overlay {
+	left: 0;
+	width: 100%;
+	position: fixed;
+	_position: absolute;
+	bottom: 0;
+	_bottom: -1px;
+	z-index:999;
+}
+.cj-tuiguang-outter {
+	position: relative;
+	margin: 0 auto;
+	width: 960px;
+}
+.cj-tuiguang {	
+	padding-left: 20px;
+	height: 80px;
+	background: url(../images/tuiguang_bg.jpg);
+	position: relative;
+}
+.cj-tuiguang .f12bla li {
+	background: url(../images/sprites09.gif) no-repeat scroll 0 -461px transparent;
+	clear:both;
+	line-height:21px;
+	overflow:hidden;
+	padding-left:9px;
+}
+.cj-tuiguang .f12bla_1 li {
+	background: url(../images/sprites09.gif) no-repeat scroll 0 -461px transparent;
+	clear:both;
+	line-height:21px;
+	overflow:hidden;
+	padding-left:9px;
+}
+.cj-exp {
+	margin-left: 10px;
+	cursor: pointer;
+	display: none;
+	position: absolute;
+	right: 10px;
+	bottom: 0;
+	width: 255px;
+	height: 38px;
+	background: url(../images/cj_exp_bj.gif);
+}
+.cj-tg-view {
+	width: 97px;
+	height: 19px;
+	line-height: 19px;
+	text-align: left;
+	text-indent: 8px;
+	background: url(../images/cj_tg_view_bg.png);
+	position: absolute;
+	left: 0;
+	bottom: 0;
+}
+.cj-tg-content {
+	margin-top: 4px;
+	width: 180px;
+	float: left;
+	text-align: left;
+}
+.cj-tg-content2{
+	margin-top: 4px;
+	width: 730px;
+	float: left;
+	text-align: left;
+}
+.bottom{
+	padding:5px 0 5px 15px;
+	list-style:none;
+	font-size:12px;
+	float:left;
+	width:650px;
+}
+
+
+.cj-tg-content .c-left {
+	float: left
+}
+.cj-tg-content .c-right {
+	margin-left: 6px;
+	float: left
+}
+.c-right p{
+	margin-top:15px;
+	vertical-align:middle;
+	font-size:24px;
+}
+.c-right a{
+	font-size:36px;
+	color:#666;
+	font-weight:700px;
+}
+.cj-tg-content .c-right .f12bla li {
+	background: url(white_dot.gif) no-repeat;
+}
+.cj-tg-content .c-right .f12bla_1 li {
+	background: url(white_dot.gif) no-repeat;
+}
+.cj-tg-content h3 {
+	margin-top: 4px;
+	font-weight: bold;
+	height: 24px;
+	line-height: 24px;
+	font-size: 14px;
+}
+.cj-tg-list {
+	color: #003d6c;
+	overflow: hidden;
+	padding: 4px 0 0 10px;
+	text-align: left;
+	margin-top: 6px;
+	float: left;
+	width: 175px;
+	height: 65px;
+}
+#btnTG {
+	font-size: 0;
+	position: absolute;
+	top: 5px;
+	right: 6px;
+	width: 11px;
+	height: 12px;
+	background: url(../images/cj_close_tg.gif);
+}
