@@ -5,44 +5,7 @@
         <meta name="google" value="notranslate" />         
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-        <script type="text/javascript">
-            //上传音频文件需要预设置
-            function soundUploadConfig()
-            {
-                return {
-                    "uploadURL": "../uploadMP3",
-                    "uid": "4", 
-                    "sign": "93063902dcfb9086ab87ff725d33b8fa44885114dd163e42ae89c04fc19f8947"
-                };
-            }
-            //上传音频文件把服务器返回的东西给 js 用
-            function soundUploadCallback(_json)
-            {
-                console.log(_json);
-            }
-        </script>
-        
-        <script type="text/javascript" src="swfobject.js"></script>
-        <script type="text/javascript">
-            var swfVersionStr = "11.1.0";
-            var xiSwfUrlStr = "playerProductInstall.swf";
-            var flashvars = {};
-            var params = {};
-            params.quality = "high";
-            params.bgcolor = "#ffffff";
-            params.allowscriptaccess = "sameDomain";
-            params.allowfullscreen = "true";
-            var attributes = {};
-            attributes.id = "sound_record";
-            attributes.name = "sound_record";
-            attributes.align = "middle";
-            swfobject.embedSWF(
-                "sound_record.swf", "flashContent", 
-                "238", "140", 
-                swfVersionStr, xiSwfUrlStr, 
-                flashvars, params, attributes);
-            swfobject.createCSS("#flashContent", "display:block;text-align:left;");
-        </script>
+ 
     </head>
     <body>
         <div id="flashContent">
@@ -59,7 +22,7 @@
         
         <noscript>
 			<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="238" height="140" id="sound_record">
-                <param name="movie" value="sound_record.swf" />
+                <param name="movie" value="../swf/sound_record.swf" />
                 <param name="quality" value="high" />
                 <param name="bgcolor" value="#ffffff" />
                 <param name="allowScriptAccess" value="sameDomain" />
@@ -90,4 +53,42 @@
 		<param name="movie" value="../webplayer/dewplayer.swf?mp3=FlashRecord.mp3" />
 	</object>        
    </body>
+          <script type="text/javascript">
+            //上传音频文件需要预设置
+            function soundUploadConfig()
+            {
+                return {
+                    "uploadURL": "../uploadMP3",
+                    "uid": "4", 
+                    "sign": "93063902dcfb9086ab87ff725d33b8fa44885114dd163e42ae89c04fc19f8947"
+                };
+            }
+            //上传音频文件把服务器返回的东西给 js 用
+            function soundUploadCallback(_json)
+            {
+                console.log(_json);
+            }
+        </script>
+        
+        <script type="text/javascript" src="./swf/swfobject.js"></script>
+        <script type="text/javascript">
+            var swfVersionStr = "11.1.0";
+            var xiSwfUrlStr = "./swf/playerProductInstall.swf";
+            var flashvars = {};
+            var params = {};
+            params.quality = "high";
+            params.bgcolor = "#ffffff";
+            params.allowscriptaccess = "sameDomain";
+            params.allowfullscreen = "true";
+            var attributes = {};
+            attributes.id = "sound_record";
+            attributes.name = "sound_record";
+            attributes.align = "middle";
+            swfobject.embedSWF(
+                "./swf/sound_record.swf", "flashContent", 
+                "238", "140", 
+                swfVersionStr, xiSwfUrlStr, 
+                flashvars, params, attributes);
+            swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+        </script>
 </html>

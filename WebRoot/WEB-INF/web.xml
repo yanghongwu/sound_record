@@ -34,4 +34,12 @@
     <servlet-name>uploadMP3</servlet-name>
     <url-pattern>/uploadMP3</url-pattern>
   </servlet-mapping>  
+  <servlet>
+    <servlet-name>uploadFhyMP3</servlet-name>
+    <servlet-class>fhy.TestSoundRecordMP3FhyServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>uploadFhyMP3</servlet-name>
+    <url-pattern>/uploadFhyMP3</url-pattern>
+  </servlet-mapping>    
 </web-app>

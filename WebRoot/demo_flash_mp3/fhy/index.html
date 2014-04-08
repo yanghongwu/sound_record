@@ -14,17 +14,17 @@
     <script type="text/javascript" src="js/dd_png.js"></script>
     <script type="text/javascript">
     DD_belatedPNG.fix('.pngbj,.box');
-    </script>
+    </script>"WebRoot/demo_flash_mp3/fhy/js/a1.js"
 <![endif]-->
 
-<script type="text/javascript" src="swfobject.js"></script>
+<script type="text/javascript" src="./js/swfobject.js"></script>
 <script type="text/javascript">
 
 
 	//上传音频文件需要预设置
 	function soundUploadConfig() {
 		return {
-			"uploadURL" : "../uploadMP3",
+			"uploadURL" : "../../uploadFhyMP3",
 			"uid" : "4",
 			"sign" : "93063902dcfb9086ab87ff725d33b8fa44885114dd163e42ae89c04fc19f8947"
 		};
@@ -67,7 +67,7 @@
 	$(function() {
 
 		var swfVersionStr = "11.1.0";
-		var xiSwfUrlStr = "playerProductInstall.swf";
+		var xiSwfUrlStr = "./swf/playerProductInstall.swf";
 		var flashvars = {};
 		var params = {};
 		params.quality = "high";
@@ -78,7 +78,7 @@
 		attributes.id = "sound_record";
 		attributes.name = "sound_record";
 		attributes.align = "middle";
-		swfobject.embedSWF("sound_record.swf", "flashContent", "238", "140",
+		swfobject.embedSWF("./swf/sound_record.swf", "flashContent", "238", "140",
 				swfVersionStr, xiSwfUrlStr, flashvars, params, attributes);
 		swfobject.createCSS("#flashContent", "display:block;text-align:left;height:auto");
 		
@@ -299,7 +299,7 @@
 										<div class="answerVoiceFile">
 											<div class="voice_player">
 
-												<object type="application/x-shockwave-flash" data="../webplayer/dewplayer.swf?mp3=FlashRecord.mp3" width="160" height="40" id="dewplayer-mini">
+												<object type="application/x-shockwave-flash" data="../../webplayer/dewplayer.swf?mp3=FlashRecord.mp3" width="160" height="40" id="dewplayer-mini">
 													<param name="wmode" value="transparent" />
 													<param name="movie" value="../webplayer/dewplayer.swf?mp3=FlashRecord.mp3" />
 												</object>
