@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
-  <display-name>speechInput</display-name>
+  <display-name>speechInput_git</display-name>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
@@ -33,7 +33,7 @@
   <servlet-mapping>
     <servlet-name>uploadMP3</servlet-name>
     <url-pattern>/uploadMP3</url-pattern>
-  </servlet-mapping>  
+  </servlet-mapping>
   <servlet>
     <servlet-name>uploadFhyMP3</servlet-name>
     <servlet-class>fhy.TestSoundRecordMP3FhyServlet</servlet-class>
@@ -41,5 +41,5 @@
   <servlet-mapping>
     <servlet-name>uploadFhyMP3</servlet-name>
     <url-pattern>/uploadFhyMP3</url-pattern>
-  </servlet-mapping>    
+  </servlet-mapping>
 </web-app>

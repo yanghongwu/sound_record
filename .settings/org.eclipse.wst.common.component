@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="speechInput">
+    <wb-module deploy-name="speechInput_git">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
         <wb-resource deploy-path="/" source-path="/WebRoot"/>
-        <property name="java-output-path" value="/speechInput/build/classes"/>
-        <property name="context-root" value="speechInput"/>
+        <property name="java-output-path" value="/speechInput_git/build/classes"/>
+        <property name="context-root" value="speechInput_git"/>
     </wb-module>
 </project-modules>
