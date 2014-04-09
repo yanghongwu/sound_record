@@ -17,26 +17,11 @@
     </script>"WebRoot/demo_flash_mp3/fhy/js/a1.js"
 <![endif]-->
 
-<script type="text/javascript" src="./js/swfobject.js"></script>
+<script type="text/javascript" src="./swf/swfobject.js"></script>
+<script type="text/javascript" src="./swf/speechInputMP3.js"></script>
 <script type="text/javascript">
-
-
-	//上传音频文件需要预设置
-	function soundUploadConfig() {
-		return {
-			"uploadURL" : "../../uploadFhyMP3",
-			"uid" : "4",
-			"sign" : "93063902dcfb9086ab87ff725d33b8fa44885114dd163e42ae89c04fc19f8947"
-		};
-	}
-	//上传音频文件把服务器返回的东西给 js 用
-	function soundUploadCallback() {
-		$("#answerVoice").dialog("close");
-		$(".answerVoiceFile").fadeIn();
-	}
 	
 	$(document).ready(function() {
-		
 		// Smart Wizard 	
 		$('#wizard').smartWizard();
 
@@ -44,95 +29,9 @@
 			$('#wizard').smartWizard('showMessage', 'Finish Clicked');
 		}
 	});
-	//-----------------------------录音计时---Strart----------------------------
-	var c=1; 
-	var intervalId;  
-	function startTimer()  
-	{  
-		intervalId = setInterval(function() {
-			$('.recordTime').text(c+"\"");
-			 c=c+1;  
-		}, 1000);				
-	}  
-
-	function stopTimer()  
-	{  
-		clearInterval(intervalId);
-		$('.recordTime').text(c+"\"");
-		c=0;
-	} 
 	
-	
-	//-----------------------------录音计时----End---------------------------
 	$(function() {
 
-		var swfVersionStr = "11.1.0";
-		var xiSwfUrlStr = "./swf/playerProductInstall.swf";
-		var flashvars = {};
-		var params = {};
-		params.quality = "high";
-		params.bgcolor = "#ffffff";
-		params.allowscriptaccess = "sameDomain";
-		params.allowfullscreen = "true";
-		var attributes = {};
-		attributes.id = "sound_record";
-		attributes.name = "sound_record";
-		attributes.align = "middle";
-		swfobject.embedSWF("./swf/sound_record.swf", "flashContent", "238", "140",
-				swfVersionStr, xiSwfUrlStr, flashvars, params, attributes);
-		swfobject.createCSS("#flashContent", "display:block;text-align:left;height:auto");
-		
-		window.Recorder = {
-				recorder : null,
-				recorderOriginalWidth : 0,
-				recorderOriginalHeight : 0,
-				uploadFormId : null,
-				uploadFieldName : null,
-				isReady : false,
-
-				connect : function(name, attempts) {
-					if (navigator.appName.indexOf("Microsoft") != -1) {
-						Recorder.recorder = window[name];
-					} else {
-						Recorder.recorder = document[name];
-					}
-
-					if (attempts >= 40) {
-						return;
-					}
-
-					// flash app needs time to load and initialize
-					if (Recorder.recorder && Recorder.recorder.init) {
-						Recorder.recorderOriginalWidth = Recorder.recorder.width;
-						Recorder.recorderOriginalHeight = Recorder.recorder.height;
-						if (Recorder.uploadFormId && $) {
-							var frm = $(Recorder.uploadFormId);
-							Recorder.recorder.init(frm.attr('action').toString(),
-									Recorder.uploadFieldName, frm.serializeArray());
-						}
-						return;
-					}
-
-					setTimeout(function() {
-						Recorder.connect(name, attempts + 1);
-					}, 100);
-				},
-
-				playBack : function(name) {
-					Recorder.recorder.playBack(name);
-				},
-				startMicRecording : function() {
-					Recorder.recorder.startMicRecording();
-				},
-				stopMicRecording : function() {
-					Recorder.recorder.stopMicRecording();
-				}
-
-			};
-			
-			Recorder.connect("sound_record", 0);
-			
-		//----------------------------------------------------------------------
 		$("#takeAnswer").dialog({
 			autoOpen : false,
 			resizable : false,
@@ -156,18 +55,24 @@
 		});
 		$('.buttonFinish').click(function() {
 			window.location.href = 'stats_05_1_2.html';
-		})
+		});
+		
+		// Call Audio
+		$('.voice_player_inner').click(function() {
+			playAudio($(this).attr("audiourl"));
+		});
+		// Call Audio
 		$('.voiceBtn').toggle(function() {
+			$(".recordTime").fadeIn();
+			initInternalTimer();
 			Recorder.startMicRecording();
 			$(this).removeClass("micNormal").addClass("micPress");
-			$(".recordTime").fadeIn();
 			$(".voiceRecord").text("结束录音");
 		}, function() {
-			$(this).removeClass("micPress").addClass("micNormal");
-			//$(".recordTime").hide();
+			stopInternalTimer();
 			Recorder.stopMicRecording();
+			$(this).removeClass("micPress").addClass("micNormal");
 			$(".voiceRecord").text("开始录音");
-			stopTimer();
 		});
 	});
 </script>
@@ -226,7 +131,7 @@
 											</div>
 											<!--voice begin-->
 											<div class="voice_player">
-												<a class="voice_player_inner" href="#"> <span
+												<a class="voice_player_inner" href="javascript:void(0)"> <span
 													class="before"> </span> <span class="middle"> <span
 														class="speaker speaker_animate"> </span> <span
 														class="time" style="width: 104px;"> <span
@@ -298,20 +203,18 @@
 										</div>
 										<div class="answerVoiceFile">
 											<div class="voice_player">
-
-												<object type="application/x-shockwave-flash" data="../../webplayer/dewplayer.swf?mp3=FlashRecord.mp3" width="160" height="40" id="dewplayer-mini">
-													<param name="wmode" value="transparent" />
-													<param name="movie" value="../webplayer/dewplayer.swf?mp3=FlashRecord.mp3" />
-												</object>
-												<a class="voice_player_inner" href="#"> <span
-													class="before"> </span> <span class="middle"> <span
-														class="speaker speaker_animate"> </span> <span
-														class="time" style="width: 104px;"> <span
-															class="second">23</span> "
-													</span>
-												</span> <span class="after"> </span>
-												</a> <a href="#" class="voiceDel"
-													onclick="$('.answerVoiceFile').fadeOut();return false">删除</a>
+												<a class="voice_player_inner" href="javascript:void(0)"> 
+													<span class="before"> </span> 
+													<span class="middle"> 
+													<span class="speaker speaker_animate"> </span> 
+														<span class="time" style="width: 104px;"> 
+															<span class="second">23</span> "
+														</span>
+													</span> 
+													<span class="after"> </span>
+												</a> 
+												
+												<a href="#" class="voiceDel" onclick="$('.answerVoiceFile').fadeOut();return false">删除</a>
 											</div>
 
 										</div>
@@ -461,14 +364,17 @@
 			</div>
 			<p class="voiceRecord">开始录音</p>
 		</div>
-			<div id="flashContent">
+		<!-- 显示Adobe Flash Player面板 -->
+		<div id="flashContent">
 			<p>To view this page ensure that Adobe Flash Player version
 				11.1.0 or greater is installed.</p>
 		</div>
-
 		<div class="voiceRemind">注：录音时长不超过3分钟！</div>
 	</div>
 	<!--语音解答 end-->
+	
+	<!-- 用来播放语音 -->
+	<span id="audioPlayer"></span>
 </body>
 
 

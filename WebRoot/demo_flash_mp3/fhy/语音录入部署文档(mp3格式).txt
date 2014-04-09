@@ -1,0 +1,32 @@
+<script type="text/javascript" src="./swf/swfobject.js"></script>
+<script type="text/javascript" src="./swf/speechInputMP3.js"></script>
+
+	JavaScript需要修改的地方：
+		// Call Audio
+		$('.voice_player_inner').click(function() {
+			playAudio($(this).attr("audiourl"));
+		});
+		// Call Audio
+		$('.voiceBtn').toggle(function() {
+			$(".recordTime").fadeIn();
+			initInternalTimer();
+			Recorder.startMicRecording();
+			$(this).removeClass("micNormal").addClass("micPress");
+			$(".voiceRecord").text("结束录音");
+		}, function() {
+			stopInternalTimer();
+			Recorder.stopMicRecording();
+			$(this).removeClass("micPress").addClass("micNormal");
+			$(".voiceRecord").text("开始录音");
+		});
+	
+	Html页面添加内容：
+	
+	<!-- 显示Adobe Flash Player面板 -->
+	<div id="flashContent">
+		<p>To view this page ensure that Adobe Flash Player version
+			11.1.0 or greater is installed.</p>
+	</div>
+		
+	<!-- 用来播放语音 -->
+	<span id="audioPlayer"></span>

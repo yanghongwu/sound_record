@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript">
+	
+	function showPlayer(id,url){
+		var vhtml = '<object id="wmp"';
+		var userAg = navigator.userAgent;
+		if(-1 != userAg.indexOf("MSIE")){
+			vhtml+=' classid="clsid:6BF52A52-394A-11d3-B153-00C04F79FAA6"';
+		}
+		else if(-1 != userAg.indexOf("Firefox") || -1 != userAg.indexOf("Chrome") || -1 != userAg.indexOf("Opera") || -1 != userAg.indexOf("Safari")){
+			vhtml+=' type="application/x-ms-wmp"';
+		}
+		vhtml+=' width="230" height="64">';
+		vhtml+='<param name="URL" value="'+url+'"/>';
+		vhtml+='<param name="autoStart" value="true" />';
+		vhtml+='<param name="invokeURLs" value="false">';
+		vhtml+='<param name="playCount" value="100">';
+		vhtml+='<param name="Volume" value="100">';
+		vhtml+='<param name="defaultFrame" value="datawindow">';
+		vhtml+='</object>';
+
+		$("body").append(vhtml);
+	}
+	
+	function playAudio(audioUrl) {
+	     if (document.all) { 
+	         var payerS = '<OBJECT id="Player" style="display:none;" classid="clsid:6BF52A52-394A-11d3-B153-00C04F79FAA6" width=0 height=0 > <param name="URL" value="'+audioUrl+'" /> <param name="AutoStart" value="true" /> <EMBED name="mp3" src="'+audioUrl+'" hidden="true" type="audio/mpeg" loop="0" autostart="true"></EMBED></OBJECT>';        
+	     }
+	     else { 
+			
+ 
+	         var payerS = '<OBJECT id="Player" type="application/x-ms-wmp" src= "'+audioUrl+'" width=0 height=0> </OBJECT>';
+	     }
+	     alert(1);
+	     $("body").append(payerS);
+	  }
+	</script>
+<body>
+
+	<span onclick="playAudio('test.mp3')">²¥·Å</span>
+	
+	<span onclick="showPlayer('player','test.mp3');" id="player" name="player">²¥·Å</span>
+	
+	<object type="application/x-shockwave-flash" data="../../webplayer/dewplayer.swf?autostart=true&mp3=test.mp3" width="0" height="0" id="dewplayer-mini">
+		<param name="wmode" value="transparent" />
+		<param name="movie" value="../webplayer/dewplayer.swf?autostart=true&mp3=test.mp3" />
+	</object>
+</body>
+
+</html>

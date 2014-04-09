@@ -3,6 +3,7 @@ package fhy;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -37,6 +38,11 @@ public class TestSoundRecordMP3FhyServlet extends HttpServlet {
 		FileOutputStream fOut = new FileOutputStream(uploadFile, true);
 		fOut.write(data);
 		fOut.close();
+
+		response.setContentType("text/json;charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println("[{fileName:\"FlashRecord.mp3\",size:\"6666\"}]");
+		out.close();
 	}
 
 }
