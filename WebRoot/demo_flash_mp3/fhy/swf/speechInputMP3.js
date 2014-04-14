@@ -92,8 +92,8 @@
 		var flashvars = {};
 		var params = {};
 		params.quality = "high";
-		params.bgcolor = "#ffffff";
-		params.allowscriptaccess = "sameDomain";
+		params.bgcolor = "#cccccc";
+		params.allowscriptaccess = "always";
 		params.allowfullscreen = "true";
 		var attributes = {};
 		attributes.id = "sound_record";
@@ -137,7 +137,6 @@
 						Recorder.connect(name, attempts + 1);
 					}, 100);
 				},
-
 				playbackData : function() {
 					Recorder.recorder.playbackData();
 				},
@@ -152,8 +151,7 @@
 				},				
 				saveAudioCallBack : function() {
 					Recorder.recorder.saveAudioCallBack();
-				},
-
+				}
 		};
 		Recorder.connect("sound_record", 0);
 		
