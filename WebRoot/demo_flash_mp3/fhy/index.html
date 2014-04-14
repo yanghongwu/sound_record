@@ -7,75 +7,8 @@
 <link media="screen" rel="stylesheet" href="css/jquery.ui.core.css" />
 <link media="screen" rel="stylesheet" href="css/jquery.ui.dialog.css" />
 <link href="css/layout.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui.custom.js"></script>
-<script type="text/javascript" src="js/jquery.smartWizard-2.0.min.js"></script>
-<!--[if IE 6]>
-    <script type="text/javascript" src="js/dd_png.js"></script>
-    <script type="text/javascript">
-    DD_belatedPNG.fix('.pngbj,.box');
-    </script>"WebRoot/demo_flash_mp3/fhy/js/a1.js"
-<![endif]-->
+<link href="swf/common.css" rel="stylesheet" type="text/css" />
 
-<script type="text/javascript" src="./swf/swfobject.js"></script>
-<script type="text/javascript" src="./swf/speechInputMP3.js"></script>
-<script type="text/javascript">
-	
-	$(document).ready(function() {
-		// Smart Wizard 	
-		$('#wizard').smartWizard();
-
-		function onFinishCallback() {
-			$('#wizard').smartWizard('showMessage', 'Finish Clicked');
-		}
-	});
-	
-	$(function() {
-
-		$("#takeAnswer").dialog({
-			autoOpen : false,
-			resizable : false,
-			modal : true,
-			width : '800px',
-			title : '拍答案'
-		});
-		$("#answerPic").dialog({
-			autoOpen : false,
-			resizable : false,
-			modal : true,
-			width : '500px',
-			title : '图片解答'
-		});
-		$("#answerVoice").dialog({
-			autoOpen : false,
-			resizable : false,
-			modal : true,
-			width : '300px',
-			title : '语音解答'
-		});
-		$('.buttonFinish').click(function() {
-			window.location.href = 'stats_05_1_2.html';
-		});
-		
-		// Call Audio
-		$('.voice_player_inner').click(function() {
-			playAudio($(this).attr("audiourl"));
-		});
-		// Call Audio
-		$('.voiceBtn').toggle(function() {
-			$(".recordTime").fadeIn();
-			initInternalTimer();
-			Recorder.startMicRecording();
-			$(this).removeClass("micNormal").addClass("micPress");
-			$(".voiceRecord").text("结束录音");
-		}, function() {
-			stopInternalTimer();
-			Recorder.stopMicRecording();
-			$(this).removeClass("micPress").addClass("micNormal");
-			$(".voiceRecord").text("开始录音");
-		});
-	});
-</script>
 </head>
 <body>
 	<div class="outwrapper">
@@ -182,7 +115,7 @@
 										<div class="upAnswer tl">
 											<span class="answerText" onclick="$('.textArea').show();">文字解答</span>
 											<span class="answerVoice"
-												onclick="$('#answerVoice').dialog('open');">语音解答</span> <span
+												onclick="open_dialog($('#answerVoice'))">语音解答</span> <span
 												class="answerPic" onclick="$('#answerPic').dialog('open');">图片解答</span>
 										</div>
 										<div class="textArea">
@@ -214,7 +147,7 @@
 													<span class="after"> </span>
 												</a> 
 												
-												<a href="#" class="voiceDel" onclick="$('.answerVoiceFile').fadeOut();return false">删除</a>
+												<a href="#" class="voiceDel">删除</a>
 											</div>
 
 										</div>
@@ -360,22 +293,124 @@
 	<div id="answerVoice">
 		<div class="voiceBtn micNormal">
 			<div class="recordTime">
-				<span>0</span>"
+				<span>60</span>"
 			</div>
 			<p class="voiceRecord">开始录音</p>
 		</div>
-		<!-- 显示Adobe Flash Player面板 -->
-		<div id="flashContent">
-			<p>To view this page ensure that Adobe Flash Player version
-				11.1.0 or greater is installed.</p>
-		</div>
+
 		<div class="voiceRemind">注：录音时长不超过3分钟！</div>
 	</div>
 	<!--语音解答 end-->
-	
-	<!-- 用来播放语音 -->
-	<span id="audioPlayer"></span>
 </body>
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.custom.js"></script>
+<script type="text/javascript" src="js/jquery.smartWizard-2.0.min.js"></script>
+<!--[if IE 6]>
+    <script type="text/javascript" src="js/dd_png.js"></script>
+    <script type="text/javascript">
+    DD_belatedPNG.fix('.pngbj,.box');
+    </script>"WebRoot/demo_flash_mp3/fhy/js/a1.js"
+<![endif]-->
 
+<script type="text/javascript" src="./swf/swfobject.js"></script>
+<script type="text/javascript" src="./swf/speechInputMP3.js"></script>
+<script type="text/javascript">
+	
+	$(document).ready(function() {
+		// Smart Wizard 	
+		$('#wizard').smartWizard();
+
+		function onFinishCallback() {
+			$('#wizard').smartWizard('showMessage', 'Finish Clicked');
+		}
+	});
+	
+	// 弹出语音提示框
+	function open_dialog(obj) {
+		stopInternalTimer();
+		$('.recordTime').text(c+"\"");
+		obj.dialog('open');
+	}
+	
+	$(function() {
+		$("#takeAnswer").dialog({
+			autoOpen : false,
+			resizable : false,
+			modal : true,
+			width : '800px',
+			title : '拍答案'
+		});
+		$("#answerPic").dialog({
+			autoOpen : false,
+			resizable : false,
+			modal : true,
+			width : '500px',
+			title : '图片解答'
+		});
+		$("#answerVoice").dialog({
+			autoOpen : false,
+			resizable : false,
+			modal : true,
+			width : '300px',
+			title : '语音解答',
+			closeOnEscape: false,
+			close: function(event, ui) { 
+				if(isDelVoice) {
+					isDelVoice = false;
+					return;
+				}
+				stopInternalTimer();
+				if($("#flashContentP").hasClass("hideDivStyle") == false){
+					$("#flashContentP").addClass("hideDivStyle");
+				}
+				isCancelRecord = true;
+				if($('.voiceBtn').hasClass("micPress")){
+					$('.voiceBtn').click();
+				} 
+				if(Recorder != null) {
+					Recorder.connect("sound_record", 0);
+					Recorder.cancelMicRecording();
+				}
+			}
+		});
+		$('.buttonFinish').click(function() {
+			window.location.href = 'stats_05_1_2.html';
+		});
+		
+		$('.voiceDel').click(function() {
+			isDelVoice = true;
+			$('.answerVoiceFile').fadeOut();
+			$('#answerVoice').dialog('close');
+			return false;
+		});
+		
+		// Call Audio
+		$('.voice_player_inner').click(function() {
+			Recorder.connect("sound_record", 0);
+			Recorder.playbackData();
+			//playAudio($(this).attr("audiourl"));
+		});
+		
+		// Call Audio
+		$('.voiceBtn').toggle(function() {
+			initInternalTimer();
+			if(isCancelRecord){
+				isCancelRecord = false;
+			}
+			
+			$(".recordTime").fadeIn();
+			$(this).removeClass("micNormal").addClass("micPress");
+			$(".voiceRecord").text("结束录音");
+			
+			$("#flashContentP").remove();
+			$(".voiceRemind").prepend('<div id="flashContentP"><div id="sound_record"></div></div>');
+			speechInputInit();
+			Recorder.connect("sound_record", 0);
+			timeoutID = setTimeout(function(){Recorder.startMicRecording();clearTimeout(timeoutID);},1000);
+		}, function() {
+			stopRecording();
+		});
+	});
+</script>
 
 </html>

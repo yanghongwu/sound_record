@@ -1,59 +1,80 @@
 	//-----------------------------录音---Strart----------------------------
+	var c = 60; 
+	var intervalId;  
+	var isCancelRecord = false;
+	var isDelVoice = false;
 	//上传音频文件需要预设置，给Flash调用的，传输参数
 	function soundUploadConfig() {
 		return {
 			"uploadURL" : "../../uploadFhyMP3",
-			"uid" : "4",
-			"sign" : "93063902dcfb9086ab87ff725d33b8fa44885114dd163e42ae89c04fc19f8947"
+			"filePath" : "D:\\software\\Apache Software Foundation\\Apache2.2\\htdocs\\",
+			"audioTime" : $(".second").html()
 		};
 	}
 
-	//上传音频文件把服务器返回的东西给 js ，被Flash调用的方法；
+	//上传音频文件把服务器返回的东西给 js ，被Flash调用的方法；获取数据参考：resultJson[0].size;
 	function soundUploadCallback(resultJson) {
 		var resultJson = eval(resultJson);
-		//alert(resultJson[0].size);
-		$("#answerVoice").dialog("close");
-		$(".answerVoiceFile").fadeIn();
-		$(".voice_player_inner").attr("audiourl",resultJson[0].fileName);
+		//$(".voice_player_inner").attr("audiourl",resultJson[0].fileName);
 	}
 	
 	// 播放语音
 	function playAudio(audioUrl) {
-		var audioC = $("#audioPlayer").html();
+		audioUrl = "http://localhost/" + audioUrl;
+		var audioC = $("#audioPlayer").html();  // 对应Html的div
 		if(audioC.length > 0) {
 			$("#audioPlayer").text("");   
 			return;
 		}
 		var payerS = '<object type="application/x-shockwave-flash" data="../../webplayer/dewplayer.swf?autostart=true&mp3='+audioUrl+'" width="0" height="0" id="dewplayer-mini">';
-		payerS += '<param name="movie" value="../webplayer/dewplayer.swf?autostart=true&mp3='+audioUrl+'" />';
+		payerS += '<param name="movie" value="../../webplayer/dewplayer.swf?autostart=true&mp3='+audioUrl+'" />';
 		payerS += '</object>';
 
 		$("#audioPlayer").append(payerS);
 	}
 	
-	var c=1; 
-	var intervalId;  
-	function initInternalTimer() {
-		c = 0;
+	function stopRecording(){
+		stopInternalTimer();
+		if(isCancelRecord == false) {
+			Recorder.stopMicRecording();
+			$(".answerVoiceFile").fadeIn();
+		} else {
+			isCancelRecord = false;
+		}
+		stopRecordingAfterProcess();
 	}
-	//时间控制器
+	
+	function stopRecordingAfterProcess(){
+		$('.voiceBtn').removeClass("micPress").addClass("micNormal");
+		$(".voiceRecord").text("开始录音");
+		
+		var remainTime = $('.recordTime').text();
+		var recordTime = 59 - parseInt(remainTime.replace("\"",""));  // 防止与后端时间差一秒；
+		if(recordTime < 0) {recordTime = 0;}
+		$(".second").text(recordTime);
+		$(".ui-widget-overlay").attr("class","");
+		$("#answerVoice").parent().css("position","absolute").css("z-index","99999").css("display","inline").css("width","0").css("height","0").css("overflow","hidden");
+	}
+	
+	// 结束录音以后供Flash Call Back
+	function saveAudioCallBack(){
+		Recorder.saveAudioCallBack();
+	}
+	
+	function initInternalTimer() {
+		c = 60;
+	}
+	
+	//时间控制器  供Flash CallBack
 	function startInternalTimer()  
-	{  
+	{  					
+		$("#flashContentP").addClass("hideDivStyle");
 		intervalId = setInterval(function() {
 			$('.recordTime').text(c+"\"");
-			 c = c + 1; 
-			 
-			 if(c > 5 && c < 10) {
-				 $(".voiceRemind").text("录音时间距离3分钟还有1分钟！");
-			 }
-			 if(c > 10 && c < 15) {
-				 $(".voiceRemind").text("录音时间距离3分钟还有30秒！");
-			 }			 
-			 if(c >= 16){
-				stopInternalTimer();
-				Recorder.stopMicRecording();
-				$(".voiceBtn").removeClass("micPress").addClass("micNormal");
-				$(".voiceRecord").text("开始录音");
+			 c = c - 1; 
+			 	 
+			 if(c <= 0){
+				stopRecording();
 			 }
 		}, 1000);		
 	}  
@@ -62,9 +83,8 @@
 	{  
 		clearInterval(intervalId);
 		$('.recordTime').text(c+"\"");
-		c = 0;
+		initInternalTimer();
 	} 
-	
 	// 语音录入初始化
 	function speechInputInit(){
 		var swfVersionStr = "11.1.0";
@@ -79,9 +99,9 @@
 		attributes.id = "sound_record";
 		attributes.name = "sound_record";
 		attributes.align = "middle";
-		swfobject.embedSWF("./swf/sound_record.swf", "flashContent", "238", "140",
+		swfobject.embedSWF("./swf/sound_record.swf", "sound_record", "238", "140",
 				swfVersionStr, xiSwfUrlStr, flashvars, params, attributes);
-		swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+		swfobject.createCSS("#sound_record", "display:block;text-align:right;");
 		window.Recorder = {
 				recorder : null,
 				recorderOriginalWidth : 0,
@@ -112,26 +132,31 @@
 						}
 						return;
 					}
-
+							
 					setTimeout(function() {
 						Recorder.connect(name, attempts + 1);
 					}, 100);
 				},
 
-				playBack : function(name) {
-					Recorder.recorder.playBack(name);
+				playbackData : function() {
+					Recorder.recorder.playbackData();
 				},
 				startMicRecording : function() {
 					Recorder.recorder.startMicRecording();
 				},
 				stopMicRecording : function() {
 					Recorder.recorder.stopMicRecording();
-				}
+				},
+				cancelMicRecording : function() {
+					Recorder.recorder.cancelMicRecording();
+				},				
+				saveAudioCallBack : function() {
+					Recorder.recorder.saveAudioCallBack();
+				},
 
-			};
-			
-			Recorder.connect("sound_record", 0);
+		};
+		Recorder.connect("sound_record", 0);
+		
 	}
-	
-	speechInputInit();
+	//speechInputInit();
 	//-----------------------------录音----End---------------------------

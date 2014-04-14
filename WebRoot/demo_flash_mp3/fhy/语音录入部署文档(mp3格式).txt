@@ -1,32 +1,76 @@
 <script type="text/javascript" src="./swf/swfobject.js"></script>
 <script type="text/javascript" src="./swf/speechInputMP3.js"></script>
 
-	JavaScript需要修改的地方：
-		// Call Audio
-		$('.voice_player_inner').click(function() {
-			playAudio($(this).attr("audiourl"));
-		});
-		// Call Audio
-		$('.voiceBtn').toggle(function() {
-			$(".recordTime").fadeIn();
-			initInternalTimer();
-			Recorder.startMicRecording();
-			$(this).removeClass("micNormal").addClass("micPress");
-			$(".voiceRecord").text("结束录音");
-		}, function() {
-			stopInternalTimer();
-			Recorder.stopMicRecording();
-			$(this).removeClass("micPress").addClass("micNormal");
-			$(".voiceRecord").text("开始录音");
-		});
+<link href="swf/common.css" rel="stylesheet" type="text/css" />
+
+Html页面新增内容：
+	// 弹出语音提示框
+	function open_dialog(obj) {
+		stopInternalTimer();
+		$('.recordTime').text(c+"\"");
+		obj.dialog('open');
+	}
 	
-	Html页面添加内容：
+	$('.voiceDel').click(function() {
+		isDelVoice = true;
+		$('.answerVoiceFile').fadeOut();
+		$('#answerVoice').dialog('close');
+		return false;
+	});
+
+	// Call Audio
+	$('.voice_player_inner').click(function() {
+		Recorder.connect("sound_record", 0);
+		Recorder.playbackData();
+		//playAudio($(this).attr("audiourl"));
+	});	
 	
-	<!-- 显示Adobe Flash Player面板 -->
-	<div id="flashContent">
-		<p>To view this page ensure that Adobe Flash Player version
-			11.1.0 or greater is installed.</p>
-	</div>
+Html页面修改内容：
+	// Call Audio
+	$('.voiceBtn').toggle(function() {
+		initInternalTimer();
+		if(isCancelRecord){
+			isCancelRecord = false;
+		}
+		$("#flashContentP").remove();
+		$(".voiceRemind").prepend('<div id="flashContentP"><div id="sound_record"></div></div>');
+		speechInputInit();
 		
-	<!-- 用来播放语音 -->
-	<span id="audioPlayer"></span>
+		$(".recordTime").fadeIn();
+		$(this).removeClass("micNormal").addClass("micPress");
+		$(".voiceRecord").text("结束录音");
+
+		Recorder.connect("sound_record", 0);
+		timeoutID = setTimeout(function(){Recorder.startMicRecording();clearTimeout(timeoutID);},1000);
+	}, function() {
+		stopRecording();
+	});	
+	
+	$("#answerVoice").dialog({
+		autoOpen : false,
+		resizable : false,
+		modal : true,
+		width : '300px',
+		title : '语音解答',
+		closeOnEscape: false,
+		close: function(event, ui) { 
+			if(isDelVoice) {
+				isDelVoice = false;
+				return;
+			}
+			stopInternalTimer();
+			if($("#flashContentP").hasClass("hideDivStyle") == false){
+				$("#flashContentP").addClass("hideDivStyle");
+			}
+			isCancelRecord = true;
+			if($('.voiceBtn').hasClass("micPress")){
+				$('.voiceBtn').click();
+			} 
+			if(Recorder != null) {
+				Recorder.connect("sound_record", 0);
+				Recorder.cancelMicRecording();
+			}
+		}
+	});
+
+	
