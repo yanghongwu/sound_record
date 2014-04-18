@@ -1,76 +1,46 @@
+1. 需要应用的js 、css文件
 <script type="text/javascript" src="./swf/swfobject.js"></script>
-<script type="text/javascript" src="./swf/speechInputMP3.js"></script>
+<script type="text/javascript" src="./swf/audioRecord.js"></script>
+<script type="text/javascript" src="./swf/audioRecordLocal.js"></script>
 
-<link href="swf/common.css" rel="stylesheet" type="text/css" />
+<link href="swf/audioRecord.css" rel="stylesheet" type="text/css" />
 
-Html页面新增内容：
-	// 弹出语音提示框
-	function open_dialog(obj) {
-		stopInternalTimer();
-		$('.recordTime').text(c+"\"");
-		obj.dialog('open');
+2. JS需要实现的模板方法 在 audioRecordLoacl.js，命名统一为： xxxxForFlash() 
+
+	//[模板方法]Flash调用此方法获取上传音频文件需要的预设置
+	function soundUploadConfigForFlash() {
+		return {
+			// 下列参数根据自己需要进行设置
+			"uploadURL" : "../../uploadFhyMP3", //上传地址
+			"filePath" : "D:\\software\\Apache Software Foundation\\Apache2.2\\htdocs\\",// 音频文件保存位置
+			"audioTime" : $(".second").html() // 时间
+		};
+	}
+	//[模板方法] 点击面板允许后调用此方法   
+	function startRealRecordCallBackForFlash()  
+	{
+		startInternalTimer();
+	}  
+	
+	//[模板方法] 录音结束后使用播放的功能：Flash在播放结束后调用该方法
+	function playOverForFlash(){
+		isPlaying = false;
 	}
 	
-	$('.voiceDel').click(function() {
-		isDelVoice = true;
-		$('.answerVoiceFile').fadeOut();
-		$('#answerVoice').dialog('close');
-		return false;
-	});
+	//[模板方法] 获取页面加载Flash Div 的ID
+	function getPageLoadFlashDivIdForFlash(){
+		return "audioRecord";
+	}
 
-	// Call Audio
-	$('.voice_player_inner').click(function() {
-		Recorder.connect("sound_record", 0);
-		Recorder.playbackData();
-		//playAudio($(this).attr("audiourl"));
-	});	
-	
-Html页面修改内容：
-	// Call Audio
-	$('.voiceBtn').toggle(function() {
-		initInternalTimer();
-		if(isCancelRecord){
-			isCancelRecord = false;
-		}
-		$("#flashContentP").remove();
-		$(".voiceRemind").prepend('<div id="flashContentP"><div id="sound_record"></div></div>');
-		speechInputInit();
-		
-		$(".recordTime").fadeIn();
-		$(this).removeClass("micNormal").addClass("micPress");
-		$(".voiceRecord").text("结束录音");
+3. 页面需要添加指定Div ：  <div id="audioRecord"></div>   用来加载Flash，控制是否允许访问麦克风
 
-		Recorder.connect("sound_record", 0);
-		timeoutID = setTimeout(function(){Recorder.startMicRecording();clearTimeout(timeoutID);},1000);
-	}, function() {
-		stopRecording();
-	});	
-	
-	$("#answerVoice").dialog({
-		autoOpen : false,
-		resizable : false,
-		modal : true,
-		width : '300px',
-		title : '语音解答',
-		closeOnEscape: false,
-		close: function(event, ui) { 
-			if(isDelVoice) {
-				isDelVoice = false;
-				return;
-			}
-			stopInternalTimer();
-			if($("#flashContentP").hasClass("hideDivStyle") == false){
-				$("#flashContentP").addClass("hideDivStyle");
-			}
-			isCancelRecord = true;
-			if($('.voiceBtn').hasClass("micPress")){
-				$('.voiceBtn').click();
-			} 
-			if(Recorder != null) {
-				Recorder.connect("sound_record", 0);
-				Recorder.cancelMicRecording();
-			}
-		}
-	});
+4. 封装好的播放器调用方法：
+   1) 初始化方法调用：speechInputInit();
+   2) 开始录音方法调用：Recorder.startMicRecording();
+   3) 结束录音方法调用：Recorder.stopMicRecording();
+   4) 取消录音方法调用：Recorder.cancelMicRecording();
+   5) 保存录音方法调用：Recorder.saveAudio();
+   6) 回放录音方法调用：Recorder.playbackData();
+   7) 停止回放录音方法调用：Recorder.stopPlaybackData();   
+     
 
-	

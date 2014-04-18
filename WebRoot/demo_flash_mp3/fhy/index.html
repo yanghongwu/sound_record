@@ -7,7 +7,7 @@
 <link media="screen" rel="stylesheet" href="css/jquery.ui.core.css" />
 <link media="screen" rel="stylesheet" href="css/jquery.ui.dialog.css" />
 <link href="css/layout.css" rel="stylesheet" type="text/css" />
-<link href="swf/common.css" rel="stylesheet" type="text/css" />
+<link href="swf/audioRecord.css" rel="stylesheet" type="text/css" />
 
 </head>
 <body>
@@ -63,16 +63,6 @@
 												今年6月15日，四川达州城区正南花园附近，65岁的蒋婆婆摔倒在地，造成大腿根部粉碎性骨折，共花去医疗费、护理费等2万余元。
 											</div>
 											<!--voice begin-->
-											<div class="voice_player">
-												<a class="voice_player_inner" href="javascript:void(0)"> <span
-													class="before"> </span> <span class="middle"> <span
-														class="speaker speaker_animate"> </span> <span
-														class="time" style="width: 104px;"> <span
-															class="second">23</span> "
-													</span>
-												</span> <span class="after"> </span>
-												</a>
-											</div>
 											<!--voice end-->
 										</div>
 									</dl>
@@ -313,7 +303,8 @@
 <![endif]-->
 
 <script type="text/javascript" src="./swf/swfobject.js"></script>
-<script type="text/javascript" src="./swf/speechInputMP3.js"></script>
+<script type="text/javascript" src="./swf/audioRecordLocal.js"></script>
+<script type="text/javascript" src="./swf/audioRecord.js"></script>
 <script type="text/javascript">
 	
 	$(document).ready(function() {
@@ -329,6 +320,9 @@
 	function open_dialog(obj) {
 		stopInternalTimer();
 		$('.recordTime').text(c+"\"");
+		if($("#answerVoice").parent().attr("class") == null) {
+			$("#answerVoice").parent().attr("class","ui-dialog ui-widget ui-widget-content ui-corner-all ui-draggable");
+		}
 		obj.dialog('open');
 	}
 	
@@ -355,6 +349,7 @@
 			title : '语音解答',
 			closeOnEscape: false,
 			close: function(event, ui) { 
+				isCancelRecord = true;
 				if(isDelVoice) {
 					isDelVoice = false;
 					return;
@@ -363,12 +358,10 @@
 				if($("#flashContentP").hasClass("hideDivStyle") == false){
 					$("#flashContentP").addClass("hideDivStyle");
 				}
-				isCancelRecord = true;
 				if($('.voiceBtn').hasClass("micPress")){
 					$('.voiceBtn').click();
 				} 
 				if(Recorder != null) {
-					Recorder.connect("sound_record", 0);
 					Recorder.cancelMicRecording();
 				}
 			}
@@ -385,29 +378,40 @@
 		});
 		
 		// Call Audio
-		$('.voice_player_inner').click(function() {
-			Recorder.connect("sound_record", 0);
+		$('.voice_player_inner').toggle(function() {
+			isPlaying = true;
 			Recorder.playbackData();
-			//playAudio($(this).attr("audiourl"));
+		}, function() {
+			if(isPlaying) {
+				Recorder.stopPlaybackData();
+				isPlaying = false;
+				return;
+			} 
+			$('.voice_player_inner').click();
 		});
 		
 		// Call Audio
 		$('.voiceBtn').toggle(function() {
 			initInternalTimer();
+
+			$("#flashContentP").remove();
+			$(".voiceRemind").prepend('<div id="flashContentP"><div id="audioRecord"></div></div>');
+			$(".voiceRecord").text("正在加载......");
+			speechInputInit();
+			
+			// 判断是否执行过取消录音操作
 			if(isCancelRecord){
 				isCancelRecord = false;
 			}
 			
 			$(".recordTime").fadeIn();
 			$(this).removeClass("micNormal").addClass("micPress");
-			$(".voiceRecord").text("结束录音");
-			
-			$("#flashContentP").remove();
-			$(".voiceRemind").prepend('<div id="flashContentP"><div id="sound_record"></div></div>');
-			speechInputInit();
-			Recorder.connect("sound_record", 0);
-			timeoutID = setTimeout(function(){Recorder.startMicRecording();clearTimeout(timeoutID);},1000);
+			timeoutID = setTimeout(function(){Recorder.startMicRecording();clearTimeout(timeoutID);},1500);
 		}, function() {
+			if(isAutoStopRecording) {
+				isAutoStopRecording = false;  //恢复默认值
+				return;
+			}
 			stopRecording();
 		});
 	});

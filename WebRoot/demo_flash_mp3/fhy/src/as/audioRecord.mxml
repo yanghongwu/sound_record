@@ -28,7 +28,12 @@
 			private var urlReq:URLRequest;
 			private var sound:Sound = new Sound();
 			private var sChannel:SoundChannel;
+			private var playRecord:Boolean = true;
+			private var mp3Encoder:ShineMP3Encoder;
 			
+			/**
+			 *  初始化方法 
+			 * */
 			protected function init():void
 			{
 				Security.allowDomain("*");
@@ -44,7 +49,6 @@
 				ExternalInterface.addCallback("stopPlaybackData", stopPlaybackData);
 				ExternalInterface.addCallback("saveAudioCallBack", saveAudioCallBack);
 				ExternalInterface.addCallback("cancelMicRecording", cancelMicRecording);
-				
 			}
 			
 			/**
@@ -61,23 +65,6 @@
 				microphone.gain=50;
 			}
 			
-			/**
-			 * 播放从 url 中获取的声音文件。
-			 * 
-			 * param _url:String   "a.mp3"
-			 * 
-			 * */
-			protected function getSoundFromUrl(_url:String):void{
-//				urlReq= new URLRequest(_url);  
-//				this.sound=new Sound(); 
-//				this.sound.load(urlReq);
-//				this.sound.addEventListener(Event.COMPLETE, function(e:Event):void{
-//					this.sound=new Sound(); 
-//					this.sound.addEventListener(SampleDataEvent.SAMPLE_DATA, processSound);
-//					this.sound.play();
-//				});
-			}
-			
 			protected function processSound(event:SampleDataEvent):void
 			{
 				var bytes:ByteArray = new ByteArray();
@@ -85,7 +72,6 @@
 				
 				while(bytes.bytesAvailable) {
 					var sample:Number = bytes.readFloat();      
-					//soundRecording.writeFloat(sample);     
 				}
 				event.data.writeBytes(bytes);
 			}
@@ -125,13 +111,19 @@
 				ExternalInterface.call("saveAudioCallBack");
 			}
 			
+			/**
+			 *  面板允许后的响应事件方法
+			 * */
 			public function microphoneActivity(e:ActivityEvent):void
 			{
 				if(e.activating){
-					ExternalInterface.call("startInternalTimer");
+					ExternalInterface.call("startRealRecordCallBack");
 				}
 			}
 			
+			/**
+			 *  取消录制
+			 * */			
 			public function cancelMicRecording():void
 			{
 				isRecording = false;
@@ -142,6 +134,9 @@
 				sChannel = sound.play();
 			}
 			
+			/**
+			 *  保存音频文件
+			 * */			
 			public function saveAudioCallBack():void
 			{
 				encodeToMP3();
@@ -163,7 +158,6 @@
 			 * 播放录音
 			 * 
 			 * */
-			private var playRecord:Boolean = true;
 			public function playbackData():void
 			{
 				soundRecording.position = 0;
@@ -174,13 +168,18 @@
 				this.sound.addEventListener(Event.SOUND_COMPLETE, onSoundComplete);
 			}
 			
-			//停止播放录音                      
+			/**
+			 *  停止播放录音
+			 * */			
 			public function stopPlaybackData():void{
 				playRecord = false;
 				this.sChannel.stop();
-				ExternalInterface.call("playOver","playOver");
+				ExternalInterface.call("playBackOverCallBack","playBackOverCallBack");
 			}
 			
+			/**
+			 *  声音加载完成
+			 * */		
 			private function onSoundComplete(event:Event):void {
 				if(playRecord) {
 					this.sChannel = this.sound.play();
@@ -190,6 +189,9 @@
 				this.sChannel.removeEventListener(Event.SOUND_COMPLETE, onSoundComplete);
 			}
 			
+			/**
+			 *  加载播放的音频文件
+			 * */			
 			private function playSound(event:SampleDataEvent):void
 			{
 				if(playRecord == false){
@@ -212,12 +214,10 @@
 				}
 			}
 			
-			private var mp3Encoder:ShineMP3Encoder;
+			/**
+			 *  MP3格式转换
+			 * */
 			private function encodeToMP3():void {
-				
-				//////////
-				//tips.text = '开始转换临时格式 wav';
-				
 				var wavWriter:WAVWriter = new WAVWriter();
 				soundRecording.position = 0;
 			
@@ -237,24 +237,30 @@
 				mp3Encoder.addEventListener(ErrorEvent.ERROR, mp3EncodeError);
 				mp3Encoder.start();
 			}
+			
+			/**
+			 * MP3转码处理中响应事件方法
+			 * */
 			private function mp3EncodeProgress(event : ProgressEvent) : void {
-				
-				//tips.text = "正在转换格式：" + event.bytesLoaded + " : " + event.bytesTotal + "，请稍后。。。";
 			}
 			
+			/**
+			 * MP3转码处理错误响应事件方法
+			 * */			
 			private function mp3EncodeError(event : ErrorEvent) : void {
-				
-				//tips.text = "Error : " + event.text;
 			}
+			
+			/**
+			 * MP3转码处理完成响应事件方法
+			 * */	
 			private function mp3EncodeComplete(event:Event) : void {
-				
 				mp3Encoder.mp3Data.position = 0;
-				
-				//tips.text = "转换格式 mp3 成功，长度：" + String(mp3Encoder.mp3Data.length) + '\n\n开始上传，请稍后。。。';
-								
 				upload();
 			}
 			
+			/**
+			 *  上传音频文件
+			 * */						
 			public function upload():void{
 				
 				var params:URLVariables=new URLVariables();
@@ -282,10 +288,9 @@
 				_request.requestHeaders = new Array(new URLRequestHeader("Content-Type", "application/x-www-form-urlencoded"));
 				
 				var urlLoader:URLLoader = new URLLoader();
-				urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
+				urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
 				urlLoader.addEventListener(Event.COMPLETE, function(event:Event):void{
 					var bytesqq:ByteArray = new ByteArray();
-					//tips.text += '\n\n上传成功';
 					ExternalInterface.call("soundUploadCallback", event.currentTarget.data);
 				});
 				urlLoader.load(_request);
@@ -293,24 +298,5 @@
 			
 		]]>
 	</fx:Script>
-	
-	<!--
-	<mx:ComboBox id="comboMicList" x="67" y="63" width="196" dataProvider="{microphoneList}"/>
-	<s:Button x="279" y="63" width="90" label="选择麦克风" click="setupMicrophone()"/>
-	
-	<s:Button id="startRecordBTN" buttonMode="true" x="6" y="5" width="70" label="开始录音" click="startMicRecording()" />
-	<s:Button id="stopRecordBTN" visible="false" buttonMode="true" x="6" y="5" width="70" label="停止录音" click="stopMicRecording()"/>
-	
-	<s:Button id="starPlayBTN" enabled="false" buttonMode="true" x="84" y="5" width="70" label="播放录音" click="playbackData()"/>
-	<s:Button id="stopPlayBTN" visible="false" buttonMode="true" x="84" y="5" width="70" label="停止播放" click="stopPlaybackData()"/>
-	
-	<s:TextArea x="7" y="34" width="221" id="tips" height="96" />
-	
-	<s:Button id="uploadBTN" enabled="false" buttonMode="true" x="161" y="5" width="70" label="保存" chromeColor="#8CD0FF" click="encodeToMP3()"
-			  color="#000000"/>-->
-	
-	<!--
-	<s:Button x="134" y="108" label="播放 test.mp3" click="getSoundFromUrl('./file_upload/test.mp3?'+Math.random())"/>-->
-	
 	
 </s:Application>
