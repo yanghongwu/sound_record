@@ -8,7 +8,17 @@
 <link media="screen" rel="stylesheet" href="css/jquery.ui.dialog.css" />
 <link href="css/layout.css" rel="stylesheet" type="text/css" />
 <link href="swf/audioRecord.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.flashv{position:absolute;left:-500%;visibility:hidden;width:0;height:0;padding:0;overflow:hidden}
+.flash{
+	width:300px;height:300px;position:absolute;top:50%;left:50%;background:#f5f5f5;border:1px solid red;z-index:9999;visibility:visible
+}
 
+.flashv2{position:absolute;left:-500%;width:0;height:0;padding:0;overflow:hidden}
+.flash2{
+	width:300px;height:300px;position:absolute;top:50%;left:50%;background:#f5f5f5;border:1px solid red;z-index:9999;
+}
+</style>
 </head>
 <body>
 	<div class="outwrapper">
@@ -291,6 +301,9 @@
 		<div class="voiceRemind">注：录音时长不超过3分钟！</div>
 	</div>
 	<!--语音解答 end-->
+	<div id="audioRecordP" class="flashv2">
+		<div id="audioRecord">NOT SUPPORT	</div>
+	</div>
 </body>
 <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.custom.js"></script>
@@ -392,22 +405,40 @@
 		
 		// Call Audio
 		$('.voiceBtn').toggle(function() {
+			if(eval(isHasError)) {
+				alert(getErrorMsg());
+				return;
+			}
 			initInternalTimer();
 
-			$("#flashContentP").remove();
-			$(".voiceRemind").prepend('<div id="flashContentP"><div id="audioRecord"></div></div>');
-			$(".voiceRecord").text("正在加载......");
-			speechInputInit();
+			//$("#flashContentP").remove();
+			//$(".voiceRemind").prepend('<div id="flashContentP"><div id="audioRecord"></div></div>');
+			//$(".voiceRecord").text("正在加载......");
 			
 			// 判断是否执行过取消录音操作
 			if(isCancelRecord){
 				isCancelRecord = false;
 			}
-			
 			$(".recordTime").fadeIn();
+			
 			$(this).removeClass("micNormal").addClass("micPress");
-			timeoutID = setTimeout(function(){Recorder.startMicRecording();clearTimeout(timeoutID);},1500);
+			
+			if(!isFirstAccess) {
+				Recorder.startMicRecording();
+			} else {
+				var timeoutID = setTimeout(function(){
+					Recorder.startMicRecording();
+					clearTimeout(timeoutID);
+					if(Recorder.isAllowAccessMicrophone()){
+						$("#audioRecordP").removeClass("flashv2").addClass("flash2");
+					}
+				},2000);
+			}
 		}, function() {
+			if(eval(isHasError)) {
+				alert(getErrorMsg());
+				return;
+			}
 			if(isAutoStopRecording) {
 				isAutoStopRecording = false;  //恢复默认值
 				return;

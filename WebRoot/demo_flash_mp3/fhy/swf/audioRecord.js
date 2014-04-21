@@ -67,11 +67,14 @@
 				},				
 				saveAudio : function() {
 					Recorder.recorder.saveAudioCallBack();
-				}
+				},
+				isAllowAccessMicrophone : function() {
+					return Recorder.recorder.isAllowAccessMicrophone();
+				}	
 		};
 		Recorder.connect(getPageLoadFlashDivId(), 0);
 	}
-	
+	speechInputInit();
 	//----------------------------------------Flash 回调函数----------START------------------------------
 	//上传音频文件需要预设置，供Flash Call Back，传输参数
 	function soundUploadConfig() {
@@ -111,4 +114,14 @@
 	    if(typeof getPageLoadFlashDivIdForFlash != 'undefined' && getPageLoadFlashDivIdForFlash instanceof Function) {
 	    	return getPageLoadFlashDivIdForFlash();  
 	    }  	
+	}
+	var isHasError = false;
+	var isHasError;
+	function setGlobalErrorStatus(status,error) {
+		isHasError = status;
+		errorMsg = error;
+	}
+	
+	function getErrorMsg(){
+		return errorMsg;
 	}

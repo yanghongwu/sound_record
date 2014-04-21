@@ -6,6 +6,7 @@
 	var isDelVoice = false;  //是否删除播放录音操作标识
 	var isPlaying = false;   //是否正在播放
 	var isAutoStopRecording = false;   //是否时间到了自动停止录音
+	var isFirstAccess = true;
 	
 	//---------------------------------[模板方法]----------Start---------------------------
 	//[模板方法]Flash调用此方法获取上传音频文件需要的预设置
@@ -21,6 +22,12 @@
 	function startRealRecordCallBackForFlash()  
 	{
 		startInternalTimer();
+		if(isFirstAccess) {
+			$("#audioRecordP").removeClass("flash2").addClass("flashv2");
+			isFirstAccess = false;
+		}
+	    $(".voiceRecord").text("结束录音");
+		$("#flashContentP").addClass("hideDivStyle");
 	}  
 	
 	//[模板方法] 录音结束后使用播放的功能：Flash在播放结束后调用该方法
@@ -79,13 +86,14 @@
 	// 开始时间控制器
 	function startInternalTimer()  
 	{
-	    $(".voiceRecord").text("结束录音");
-		$("#flashContentP").addClass("hideDivStyle");
+		if(!Recorder.isAllowAccessMicrophone()){
+			$("#audioRecordP").removeClass("flash2").addClass("flashv2");
+		}
 		intervalId = setInterval(function() {
 			$('.recordTime').text(c+"\"");
 			 c = c - 1; 
 			 	 
-			 if(c <= 55){
+			 if(c <= 0){
 				isAutoStopRecording = true; 
 				stopRecording();
 				$('.voiceBtn').click();
