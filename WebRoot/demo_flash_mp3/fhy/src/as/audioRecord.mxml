@@ -2,26 +2,30 @@
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
-			   width="238" height="140"
-			   creationComplete="init()">
+			   width="238" height="140" creationComplete="init()">
 	
 	<fx:Script>
 		<![CDATA[
 			import com.adobe.audio.format.WAVWriter;
 			import com.hurlant.util.Base64;
 			
-			import flash.events.SampleDataEvent;
 			import flash.events.ActivityEvent;
+			import flash.events.SampleDataEvent;
 			import flash.external.ExternalInterface;
 			import flash.media.Microphone;
 			import flash.media.Sound;
-			import flash.utils.ByteArray;
 			import flash.system.Security;
+			import flash.utils.ByteArray;
 			
 			import fr.kikko.lab.ShineMP3Encoder;
+			
+			import mx.containers.Form;
+			
+			import flash.events.TimerEvent;
+			import flash.utils.Timer;
 									
 			[Bindable] private var microphoneList:Array;
-			protected var microphone:Microphone = Microphone.getMicrophone();;
+			protected var microphone:Microphone = Microphone.getMicrophone();
 			protected var isRecording:Boolean = false;
 			protected var soundRecording:ByteArray;
 			
@@ -30,16 +34,30 @@
 			private var sChannel:SoundChannel;
 			private var playRecord:Boolean = true;
 			private var mp3Encoder:ShineMP3Encoder;
+			private var wav:ByteArray;
 			
 			/**
 			 *  初始化方法 
 			 * */
 			protected function init():void
 			{
+				Security.showSettings(SecurityPanel.PRIVACY);
 				Security.allowDomain("*");
-				Security.allowInsecureDomain("*"); 
-
 				microphoneList = Microphone.names;
+				
+				/*
+				if(microphone == null) {
+					for(var i:* in microphoneList){
+						ExternalInterface.call("testE",i,microphoneList[i]);
+						if(microphone != null) break;
+						microphone =  Microphone.getMicrophone(i);
+					}
+				}*/
+				if((microphoneList.length <=0) && (microphone == null)) {
+					ExternalInterface.call("setGlobalErrorStatus","true","not find microphone");
+					return;
+				}
+				ExternalInterface.call("setGlobalErrorStatus","false","");
 				
 				setupMicrophone(); //自动选择第一个音频硬件
 				
@@ -47,8 +65,9 @@
 				ExternalInterface.addCallback("stopMicRecording", stopMicRecording);
 				ExternalInterface.addCallback("playbackData", playbackData);
 				ExternalInterface.addCallback("stopPlaybackData", stopPlaybackData);
-				ExternalInterface.addCallback("saveAudioCallBack", saveAudioCallBack);
+				ExternalInterface.addCallback("saveAudio", saveAudio);
 				ExternalInterface.addCallback("cancelMicRecording", cancelMicRecording);
+				ExternalInterface.addCallback("isAllowAccessMicrophone", isAllowAccessMicrophone);
 			}
 			
 			/**
@@ -57,12 +76,14 @@
 			 * */
 			protected function setupMicrophone():void
 			{
-				microphone = Microphone.getMicrophone(0);
 				microphone.rate = 44;
 				microphone.setUseEchoSuppression(true);
 				microphone.setLoopBack(false);
 				microphone.setSilenceLevel(0,0);
 				microphone.gain=50;
+				
+				microphone.addEventListener(ActivityEvent.ACTIVITY,microphoneActivity);
+				microphone.addEventListener(StatusEvent.STATUS, onMicStatus);
 			}
 			
 			protected function processSound(event:SampleDataEvent):void
@@ -91,8 +112,33 @@
 				}
 				this.sound.addEventListener(SampleDataEvent.SAMPLE_DATA, processSound);
 				sChannel = this.sound.play();
-				
-				microphone.addEventListener(ActivityEvent.ACTIVITY,microphoneActivity);
+			}
+			
+			/**
+			 * 麦克风状态
+			 * */
+			public function onMicStatus(event:StatusEvent):void
+			{
+				if (event.code == "Microphone.Unmuted") { 
+					ExternalInterface.call("allowAccessMicrophoneCallBack");
+				} else if (event.code == "Microphone.Muted") { 
+					ExternalInterface.call("denyAccessMicrophoneCallBack");
+				} 
+			}
+			
+			/**
+			 *  面板允许后的响应事件方法
+			 * */
+			public function microphoneActivity(e:ActivityEvent):void
+			{
+				if(e.activating){
+					//ExternalInterface.call("allowAccessMicrophoneCallBack");
+				} 
+			}
+			
+			// 是否允许访问麦克风
+			public function isAllowAccessMicrophone():Boolean{
+				return microphone.muted;
 			}
 			
 			/**
@@ -112,16 +158,6 @@
 			}
 			
 			/**
-			 *  面板允许后的响应事件方法
-			 * */
-			public function microphoneActivity(e:ActivityEvent):void
-			{
-				if(e.activating){
-					ExternalInterface.call("startRealRecordCallBack");
-				}
-			}
-			
-			/**
 			 *  取消录制
 			 * */			
 			public function cancelMicRecording():void
@@ -132,14 +168,6 @@
 					sChannel.stop();
 				}
 				sChannel = sound.play();
-			}
-			
-			/**
-			 *  保存音频文件
-			 * */			
-			public function saveAudioCallBack():void
-			{
-				encodeToMP3();
 			}
 			
 			/**
@@ -228,7 +256,6 @@
 				var wav:ByteArray = new ByteArray();
 
 				wavWriter.processSamples(wav, soundRecording, 44100, 1);
-				
 				wav.position = 0;
 				
 				mp3Encoder = new ShineMP3Encoder(wav);
@@ -255,7 +282,66 @@
 			 * */	
 			private function mp3EncodeComplete(event:Event) : void {
 				mp3Encoder.mp3Data.position = 0;
+				//upload();
+				uploadWithBin();
+				//uploadWithForm();  该方法暂时有问题
+			}
+			
+			public function convertToWAV():void{
+				var wavWriter:WAVWriter = new WAVWriter();
+				soundRecording.position = 0;
+				
+				wavWriter.numOfChannels = 1; 
+				wavWriter.sampleBitRate = 16; 
+				wavWriter.samplingRate = 44100; 
+				wav = new ByteArray();
+				wavWriter.processSamples(wav, soundRecording, 44100, 1);
+				wav.position = 0;
+			}
+			
+			public static function convertToWav2(soundBytes:ByteArray, sampleRate:int):ByteArray {
+				var data:ByteArray = new ByteArray();
+				data.endian = Endian.LITTLE_ENDIAN;
+				
+				var numBytes:uint = soundBytes.length / 2; // soundBytes are 32bit floats, we are storing 16bit integers
+				var numChannels:int = 1;
+				var bitsPerSample:int = 16;
+				
+				// The following is from https://ccrma.stanford.edu/courses/422/projects/WaveFormat/
+				
+				data.writeUTFBytes("RIFF"); // ChunkID
+				data.writeUnsignedInt(36 + numBytes); // ChunkSize
+				data.writeUTFBytes("WAVE"); // Format
+				data.writeUTFBytes("fmt "); // Subchunk1ID
+				data.writeUnsignedInt(16); // Subchunk1Size // 16 for PCM
+				data.writeShort(1); // AudioFormat 1 Mono, 2 Stereo (Microphone is mono)
+				data.writeShort(numChannels); // NumChannels
+				data.writeUnsignedInt(sampleRate); // SampleRate
+				data.writeUnsignedInt(sampleRate * numChannels * bitsPerSample/8); // ByteRate
+				data.writeShort(numChannels * bitsPerSample/8); // BlockAlign
+				data.writeShort(bitsPerSample); // BitsPerSample
+				data.writeUTFBytes("data"); // Subchunk2ID
+				data.writeUnsignedInt(numBytes); // Subchunk2Size
+				
+				soundBytes.position = 0;
+				while(soundBytes.bytesAvailable > 0) {
+					var sample:Number = soundBytes.readFloat(); // The sample is stored as a sine wave, -1 to 1
+					var val:int = sample * 32768; // Convert to a 16bit integer
+					data.writeShort(val);
+				}
+				
+				return data;
+			}
+			
+			/**
+			 *  保存音频文件
+			 * */			
+			public function saveAudio():void
+			{
+				//encodeToMP3();
+				//uploadWithBin();
 				upload();
+				//uploadWithForm();
 			}
 			
 			/**
@@ -268,16 +354,7 @@
 				for(var i:* in soundUploadConfig){
 					params[i] = soundUploadConfig[i];
 				}
-				var dataContent:String = Base64.encodeByteArray(mp3Encoder.mp3Data);
-				//   +/=
-				var myPattern:RegExp = /+/gi; 
-				dataContent = dataContent.replace(myPattern, "*");
-				
-				var myPattern2:RegExp = /=/gi; 
-				dataContent = dataContent.replace(myPattern2, "-");
-				
-				var myPattern3:RegExp = /\//gi; 
-				dataContent = dataContent.replace(myPattern3, "#");
+				var dataContent:String = Base64.encodeByteArray(convertToWav2(soundRecording,44100));
 				
 				params.file = dataContent;
 				
@@ -293,7 +370,93 @@
 					var bytesqq:ByteArray = new ByteArray();
 					ExternalInterface.call("soundUploadCallback", event.currentTarget.data);
 				});
+				
 				urlLoader.load(_request);
+			}
+			
+			private function uploadWithForm():void {
+				var soundUploadConfig:Object = ExternalInterface.call("soundUploadConfig","");
+				
+				var uploadFormData:Array = new Array();
+				uploadFormData.push( MultiPartFormUtil.fileField("uploadFileName",convertToWav2(soundRecording,11025), "aaa.wav", "audio/x-wav") );
+				
+				var request:URLRequest = MultiPartFormUtil.request(uploadFormData);
+				
+				uploadFormData.pop();
+				
+				request.url = soundUploadConfig.uploadURL;
+				var loader:URLLoader = new URLLoader();
+				
+				loader.addEventListener(Event.COMPLETE, function(event:Event):void{
+					ExternalInterface.call("soundUploadCallback", event.currentTarget.data);
+				});
+				loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+				loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
+				
+				try{
+					loader.load(request);
+				}catch(e:Error){
+					ExternalInterface.call("info","error:" +　e.message);
+				}
+				
+			}
+			
+			public function uploadWithForm2():void{
+				var params:URLVariables=new URLVariables();
+				var soundUploadConfig:Object = ExternalInterface.call("soundUploadConfig","");
+				
+				try{
+					var uploadContentBinByteArray:ByteArray = UploadPostHelper.getPostData("fhy.mp3",mp3Encoder.mp3Data,soundUploadConfig);
+					
+					var _request:URLRequest = new URLRequest();
+					_request.url = soundUploadConfig.uploadURL;
+					_request.method = URLRequestMethod.POST;
+					_request.data = uploadContentBinByteArray;					
+					_request.requestHeaders = new Array(new URLRequestHeader("Content-Type", "multipart/form-data; boundary=" + UploadPostHelper.getBoundary()),new URLRequestHeader("aaaaa", "bbbbbbb"));
+						
+					var urlLoader:URLLoader = new URLLoader();
+					urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
+					urlLoader.addEventListener(Event.COMPLETE, function(event:Event):void{
+						var bytesqq:ByteArray = new ByteArray();
+						ExternalInterface.call("soundUploadCallback", event.currentTarget.data);
+					});
+					urlLoader.load(_request);
+				}
+				catch(e:Error){
+					// ExternalInterface.call("errorMsg", e.getStackTrace());
+				}
+
+			}
+			
+			public function uploadWithBin():void{
+				var soundUploadConfig:Object = ExternalInterface.call("soundUploadConfig","");
+				
+				try{
+					var _request:URLRequest = new URLRequest();
+					_request.url = soundUploadConfig.uploadURL;
+					_request.method = URLRequestMethod.POST;
+					_request.data = convertToWav2(soundRecording,11025);
+					_request.requestHeaders = new Array(new URLRequestHeader("Content-Type", "application/octet-stream"),new URLRequestHeader("filePath",soundUploadConfig.filePath),new URLRequestHeader("audioTime", soundUploadConfig.audioTime));
+					
+					var urlLoader:URLLoader = new URLLoader();
+
+					urlLoader.addEventListener(Event.COMPLETE, function(event:Event):void{
+						var bytesqq:ByteArray = new ByteArray();
+						ExternalInterface.call("soundUploadCallback", event.currentTarget.data);
+					});
+					urlLoader.load(_request);
+				}
+				catch(e:Error){
+					// ExternalInterface.call("errorMsg", e.getStackTrace());
+				}
+			}
+			
+			private function onIOError(event:Event):void {
+				ExternalInterface.call("info","onIOError:" +　IOErrorEvent(event).text);
+			}
+			
+			private function onSecurityError(event:Event):void {
+				ExternalInterface.call("info","onSecurityError:" +　SecurityErrorEvent(event).text);
 			}
 			
 		]]>

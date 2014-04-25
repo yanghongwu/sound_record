@@ -41,6 +41,7 @@
    4) 取消录音方法调用：Recorder.cancelMicRecording();
    5) 保存录音方法调用：Recorder.saveAudio();
    6) 回放录音方法调用：Recorder.playbackData();
-   7) 停止回放录音方法调用：Recorder.stopPlaybackData();   
+   7) 停止回放录音方法调用：Recorder.stopPlaybackData();  
+   8) 是否允许访问麦克风调用：Recorder.isAllowAccessMicrophone();  如果允许访问麦克风就不需要用户再去设置。 
      
 

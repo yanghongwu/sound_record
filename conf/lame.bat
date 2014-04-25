@@ -1,0 +1,1 @@
+D:\software\Lame\lame.exe -V2  %1 %2

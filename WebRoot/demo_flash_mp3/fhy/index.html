@@ -8,17 +8,6 @@
 <link media="screen" rel="stylesheet" href="css/jquery.ui.dialog.css" />
 <link href="css/layout.css" rel="stylesheet" type="text/css" />
 <link href="swf/audioRecord.css" rel="stylesheet" type="text/css" />
-<style type="text/css">
-.flashv{position:absolute;left:-500%;visibility:hidden;width:0;height:0;padding:0;overflow:hidden}
-.flash{
-	width:300px;height:300px;position:absolute;top:50%;left:50%;background:#f5f5f5;border:1px solid red;z-index:9999;visibility:visible
-}
-
-.flashv2{position:absolute;left:-500%;width:0;height:0;padding:0;overflow:hidden}
-.flash2{
-	width:300px;height:300px;position:absolute;top:50%;left:50%;background:#f5f5f5;border:1px solid red;z-index:9999;
-}
-</style>
 </head>
 <body>
 	<div class="outwrapper">
@@ -365,12 +354,10 @@
 				isCancelRecord = true;
 				if(isDelVoice) {
 					isDelVoice = false;
+					Recorder.stopPlaybackData();
 					return;
 				}
 				stopInternalTimer();
-				if($("#flashContentP").hasClass("hideDivStyle") == false){
-					$("#flashContentP").addClass("hideDivStyle");
-				}
 				if($('.voiceBtn').hasClass("micPress")){
 					$('.voiceBtn').click();
 				} 
@@ -410,11 +397,10 @@
 				return;
 			}
 			initInternalTimer();
+			var top=$("#answerVoice").parent().offset().top;
+			var left=$("#answerVoice").parent().offset().left;
+			$("#audioRecordP").css({'top':top,'left':left});
 
-			//$("#flashContentP").remove();
-			//$(".voiceRemind").prepend('<div id="flashContentP"><div id="audioRecord"></div></div>');
-			//$(".voiceRecord").text("正在加载......");
-			
 			// 判断是否执行过取消录音操作
 			if(isCancelRecord){
 				isCancelRecord = false;
@@ -423,16 +409,12 @@
 			
 			$(this).removeClass("micNormal").addClass("micPress");
 			
-			if(!isFirstAccess) {
+			if(!isFirstAccess) {  // 用户拒绝访问麦克风后，下次在执行录制时认为还是第一次；
 				Recorder.startMicRecording();
+				allowAccessMicrophoneCallBackForFlash();
 			} else {
-				var timeoutID = setTimeout(function(){
-					Recorder.startMicRecording();
-					clearTimeout(timeoutID);
-					if(Recorder.isAllowAccessMicrophone()){
-						$("#audioRecordP").removeClass("flashv2").addClass("flash2");
-					}
-				},2000);
+				$(".voiceRecord").text("正在加载麦克风......");
+				timeoutID = setTimeout("startLazyRecording()",2000);
 			}
 		}, function() {
 			if(eval(isHasError)) {

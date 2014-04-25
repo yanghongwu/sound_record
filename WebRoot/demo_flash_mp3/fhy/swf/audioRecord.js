@@ -66,10 +66,15 @@
 					Recorder.recorder.cancelMicRecording();
 				},				
 				saveAudio : function() {
-					Recorder.recorder.saveAudioCallBack();
+					Recorder.recorder.saveAudio();
 				},
 				isAllowAccessMicrophone : function() {
-					return Recorder.recorder.isAllowAccessMicrophone();
+					var isAllow = false;
+					var result = Recorder.recorder.isAllowAccessMicrophone();
+					if(result == "false") {
+						isAllow = true;
+					}
+					return isAllow;
 				}	
 		};
 		Recorder.connect(getPageLoadFlashDivId(), 0);
@@ -100,13 +105,22 @@
 	    }  	
 	}
 	
-	//录音功能真正起作用是在允许后；  供Flash CallBack  用户点击安全提示面板的允许后，Flash调用此方法
-	function startRealRecordCallBack()  
+	//用户允许访问麦克风；  供Flash CallBack  用户点击安全提示面板的允许后，Flash调用此方法
+	function allowAccessMicrophoneCallBack()  
 	{
-	    if(typeof startRealRecordCallBackForFlash != 'undefined' && startRealRecordCallBackForFlash instanceof Function) {
-	    	startRealRecordCallBackForFlash();  
+	    if(typeof allowAccessMicrophoneCallBackForFlash != 'undefined' && allowAccessMicrophoneCallBackForFlash instanceof Function) {
+	    	allowAccessMicrophoneCallBackForFlash();  
 	    }       
 	}  
+	
+	//用户拒绝访问麦克风；  供Flash CallBack  用户点击安全提示面板的拒绝后，Flash调用此方法
+	function denyAccessMicrophoneCallBack()  
+	{
+	    if(typeof denyAccessMicrophoneCallBackForFlash != 'undefined' && denyAccessMicrophoneCallBackForFlash instanceof Function) {
+	    	denyAccessMicrophoneCallBackForFlash();  
+	    }       
+	}  	
+	
 	//----------------------------------------Flash 回调函数-------END---------------------------------
 	
 	// 获取页面加载Flash Div 的ID
@@ -124,4 +138,8 @@
 	
 	function getErrorMsg(){
 		return errorMsg;
+	}
+	
+	function info(msg){
+		//console.info(msg);
 	}
