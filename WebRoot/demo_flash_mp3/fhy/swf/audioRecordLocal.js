@@ -16,7 +16,10 @@
 			// 下列参数根据自己需要进行设置
 			"uploadURL" : "../../uploadFhyMP3", //上传地址
 			"filePath" : "D:\\temp\\",// 音频文件保存位置
-			"audioTime" : $(".second").html() // 时间
+			"duration_time" : $(".second").html(), // 时间
+			"wrongthemeid" : $(".second").html(), // 时间
+			"answer_origin" : $(".second").html(), // 时间
+			"audio_origin" : $(".second").html()// 时间
 		};
 	}
 	//[模板方法] 用户允许访问麦克风调用此方法   

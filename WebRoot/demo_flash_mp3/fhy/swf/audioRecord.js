@@ -12,7 +12,7 @@
 		attributes.id = getPageLoadFlashDivId();
 		attributes.name = getPageLoadFlashDivId();
 		attributes.align = "middle";
-		swfobject.embedSWF("./swf/audioRecord.swf",getPageLoadFlashDivId(), "238", "140",
+		swfobject.embedSWF("./swf/audioRecord.swf",getPageLoadFlashDivId(), "214", "137",
 				swfVersionStr, xiSwfUrlStr, flashvars, params, attributes);
 		swfobject.createCSS("#"+getPageLoadFlashDivId(), "display:block;text-align:right;");
 		window.Recorder = {

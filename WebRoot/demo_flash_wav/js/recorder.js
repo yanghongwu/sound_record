@@ -50,7 +50,7 @@ function microphone_recorder_events() {
 		intervalId = setInterval(function() {
 			var duration = Recorder.duration('audio');
 			$('#duration').text(duration.toFixed(4) + " seconds");
-		}, 1000);// ÏÔÊ¾Â¼ÖÆÊ±¼äµÄ¶¨Ê±ÈÎÎñ
+		}, 1000);// ï¿½ï¿½Ê¾Â¼ï¿½ï¿½Ê±ï¿½ï¿½Ä¶ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 		break;
 	case "recording_stopped":
 		var name = arguments[1];
@@ -59,7 +59,7 @@ function microphone_recorder_events() {
 		$('#record_button img').attr('src', 'images/record.png');
 		$('#duration').text(duration.toFixed(4) + " seconds");
 		$('#play_button').show();
-		clearInterval(intervalId); // Çå³ýÏÔÊ¾Â¼ÖÆÊ±¼äµÄ¶¨Ê±ÈÎÎñ
+		clearInterval(intervalId); // ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾Â¼ï¿½ï¿½Ê±ï¿½ï¿½Ä¶ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 		break;
 	case "playing":
 		var name = arguments[1];
@@ -195,7 +195,7 @@ function microphone_recorder_events() {
 		},
 
 		configure : function(rate, gain, silenceLevel, silenceTimeout) {
-			rate = parseInt(rate || 22);
+			rate = parseInt(rate || 11);
 			gain = parseInt(gain || 100);
 			silenceLevel = parseInt(silenceLevel || 0);
 			silenceTimeout = parseInt(silenceTimeout || 4000);

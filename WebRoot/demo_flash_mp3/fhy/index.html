@@ -351,6 +351,10 @@
 			title : '语音解答',
 			closeOnEscape: false,
 			close: function(event, ui) { 
+				if(eval(isHasError)) {
+					alert(getErrorMsg());
+					return;
+				}
 				isCancelRecord = true;
 				if(isDelVoice) {
 					isDelVoice = false;
