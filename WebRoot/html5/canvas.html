@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html;charset=GBK">
+	<title>html test</title>
+	<script type="text/javascript" src="jquery-2.1.1.min.js"></script>
+	<script type="text/javascript">
+		var context;
+		
+		window.onload=init;
+		
+		function init(){
+			if(!!document.getElementById("shapes").getContext){
+				var canvas = document.getElementById("shapes");
+				context = canvas.getContext("2d");
+				//draw();
+				imageData();
+			} else {
+				alert("不支持canvas");
+			}
+		}
+		//-------------------------------------------------------------------------------------
+	
+		function imageData(){			
+			var photo = new Image();
+			photo.onload=imageLoaded;
+			photo.src="test.png";
+		}
+	
+		function imageLoaded(evt){
+			originalPic = evt.target;
+			context.drawImage(originalPic,0,0);
+			var imgd = context.getImageData(0,0,originalPic.width,originalPic.height);
+			applyBluefilters(imgd);
+			applyRedfilters(imgd);
+			applyGreenfilters(imgd);
+		}
+		
+		function applyBluefilters(img){
+			var pixelsArray=img.data;
+			for(var i=0;i<pixelsArray.length;i+=4){
+				r=img.data[i]/2;
+				g=img.data[i+1]/2;
+				b=img.data[i+2]*2.5;
+				a=img.data[i+3];
+				img.data[i]=r;
+				img.data[i+1]=g;
+				img.data[i+2]=b;
+				img.data[i+3]=a;
+			}
+			context.putImageData(img,170,0);
+		}
+		
+		function applyRedfilters(img){
+			var pixelsArray=img.data;
+			for(var i=0;i<pixelsArray.length;i+=4){
+				r=img.data[i]*3;
+				g=img.data[i+1]/2;
+				b=img.data[i+2]/2;
+				a=img.data[i+3];
+				img.data[i]=r;
+				img.data[i+2]=b;
+				img.data[i+3]=a;
+			}
+			context.putImageData(img,0,130);
+		}
+		
+		function applyGreenfilters(img){
+			var pixelsArray=img.data;
+			for(var i=0;i<pixelsArray.length;i+=4){
+				r=img.data[i]/2;
+				g=img.data[i+1]*4;
+				b=img.data[i+2]/2.5;
+				a=img.data[i+3];
+				img.data[i]=r;
+				img.data[i+1]=g;
+				img.data[i+2]=b;
+				img.data[i+3]=a;
+			}
+			context.putImageData(img,170,130);
+		}
+		
+		//-------------------------------------------------------------------------------------
+		function draw(){
+			context.fillStyle='#000099';
+			context.fillRect(0,0,200,155);
+			context.save();
+			context.fillStyle='#FF66FF';
+			context.globalAlpha=.6;
+			context.fillRect(15,15,120,120);
+			context.save();
+			context.fillStyle='#993333';
+			context.globalAlpha=1;
+			context.fillRect(30,30,90,90);
+			context.restore();
+			context.fillRect(145,15,40,120);
+			context.restore();
+			context.fillRect(55,55,40,40);
+		}
+	
+		function drawShapes(){
+			context.fillStyle="rgb(255,0,255)";
+			context.fillRect(0,0,200,200);
+			context.beginPath();
+			context.strokeStyle="rgb(3,0,255)";
+			context.fillStyle="#29ABE2";
+			context.linewidth="5";
+			context.arc(100,100,50,0,Math.PI*2,true);
+			context.stroke();
+			context.fill();
+		}
+		
+		function saveCanvas(){
+			urlData = canvas.toDataURL();
+			window.location=urlData;
+		}
+				
+	</script>
+	
+</head>
+<body>
+		
+		<canvas id="shapes" width="500" height="500" style="border:solid 1px #ccc"></canvas>
+		<button onclick="saveCanvas();">Save PNG</button>
+</body>

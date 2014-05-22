@@ -1,7 +1,6 @@
 package fhy;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,30 +23,20 @@ public class TestRecordServlet extends HttpServlet {
 		HttpServletRequest request = (HttpServletRequest) arg0;
 		BufferedInputStream fileIn = new BufferedInputStream(request.getInputStream());
 
-		File file = new File("D:/deploy/apache-tomcat-6.0.39/wtpwebapps/speechInput/demo_html5/out.wav");
+		String filePath = "D:\\software\\Apache Software Foundation\\Apache2.2\\htdocs\\audioTest\\";
+		File file = new File(filePath + "test.wav");
 		if (!file.exists()) {
 			file.createNewFile();
 		}
 		byte[] data = new byte[1024];
 
-		BufferedOutputStream fileOut = new BufferedOutputStream(new FileOutputStream(file));
-
-		while (true) {
-			int bytesIn = fileIn.read(data, 0, 1024);
-			System.out.println(bytesIn);
-			if (bytesIn == -1) {
-				break;
-			} else {
-				try {
-					FileOutputStream fOut = new FileOutputStream(file, true);
-					fOut.write(data);
-					fOut.close();
-				} catch (Exception e) {
-				}
-			}
+		FileOutputStream fOut = new FileOutputStream(file);
+		int size = 0;
+		while ((size = fileIn.read(data)) != -1) {
+			fOut.write(data, 0, size);
 		}
 
-		fileOut.flush();
-		fileOut.close();
+		fOut.flush();
+		fOut.close();
 	}
 }

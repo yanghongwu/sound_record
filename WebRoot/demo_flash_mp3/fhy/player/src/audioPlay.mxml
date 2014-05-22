@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="238" height="140" creationComplete="init()">
+	
+	<fx:Script>
+		<![CDATA[
+			private var urlReq:URLRequest;
+			private var sampleRateValue:int = 11;
+			private var hasMic:Boolean = true;
+			private var poMem:Number;  // 播放内存中音频的位置
+			
+			private var lastPlayTime:int = 0;  // 上一次的播放时间，解决JS端停留在1秒的问题
+			private var lessPlayTimeCount:int = 0;  // 实际播放时间大于传入的总时间的次数
+			
+			/**
+			 *  初始化方法 
+			 * */
+			protected function init():void
+			{
+				Security.allowDomain("*");
+				
+				ExternalInterface.addCallback("playMP3", playMP3);
+				ExternalInterface.addCallback("stopPlayMP3", stopPlayMP3);
+				ExternalInterface.addCallback("remainTime", remainTime);
+			}
+			
+			public function frequency(rate:int):int {
+				switch(rate) {
+					case 44:
+						return 44100;
+					case 22:
+						return 22050;
+					case 11:
+						return 11025;
+					case 8:
+						return 8000;
+					case 5:
+						return 5512;
+				}
+				return 0;
+			}
+			
+			private var mysound:Sound; 
+			private var mysoundChannel:SoundChannel; 
+			private var po:Number;  
+			
+			public function playMP3(url:String):void {  
+				lastPlayTime = 0;
+				lessPlayTimeCount = 0;
+				var buffer:SoundLoaderContext = new SoundLoaderContext(5000,true);    
+				var request:URLRequest=new URLRequest(url);  
+
+				if(mysound) {
+					stopPlayMP3();
+				}
+				
+				mysound = new Sound();	
+				//注册加载完成事件  
+				mysound.addEventListener(Event.COMPLETE,loadMP3CompleteHandler);  
+				//加载文件  
+				mysound.load(request,buffer);  
+				
+				//加载完成，开始播放  
+				mysoundChannel = mysound.play();
+			
+				//加入帧循环事件，逐帧计算播放进度  
+				//addEventListener(Event.ENTER_FRAME,onenterframe);  
+				
+				mysound.addEventListener(Event.SOUND_COMPLETE, onMySoundComplete);
+			} 
+			
+			public function stopPlayMP3():void{
+				try{
+					if(mysoundChannel) {
+						mysoundChannel.stop();
+						//mysoundChannel.position = 0;
+					}
+				    removeEventListener(Event.ENTER_FRAME,onenterframe);  
+					mysound.removeEventListener(Event.SOUND_COMPLETE, onMySoundComplete);
+				}catch(e:Error){
+					//ExternalInterface.call("info", e.message);
+				}
+			}
+			
+			//创建加载完成事件侦听函数  
+			private function loadMP3CompleteHandler(event:Event):void {  
+				ExternalInterface.call("loadMP3CompleteCallBack","loadMP3CompleteCallBack");
+			}  
+			
+			//创建逐帧计算和显示进度事件处理函数  
+			private function onenterframe(evt:Event):void {  
+				//获取当前播放头所对应的音频文件长度  
+				if(mysoundChannel){
+					po = mysoundChannel.position;  
+				}
+			}
+				
+			private function onMySoundComplete(event:Event):void {
+				stopPlayMP3();
+			}
+			
+			// 返回总数表示没有播放，返回0表示播放结束
+			public function remainTime(totalTime:int):Number {
+				if(totalTime <= 0) {
+					return totalTime;
+				}
+				
+				if(mysoundChannel){
+					po = mysoundChannel.position;
+				}
+				  
+				if(po <= 0) {
+					return totalTime;
+				}
+				
+				var playedTime:int = Math.round(po/1000)
+				
+				if(playedTime >= totalTime) {
+					lessPlayTimeCount++;
+					var returnValue:int = 1;
+					if(lessPlayTimeCount>=2) {
+						returnValue = 0;
+					} 
+					return returnValue;
+				}
+				
+				var duration:int = totalTime - playedTime;
+				
+				if(duration == lastPlayTime && lastPlayTime < 2) {
+					return 0;
+				}
+				lastPlayTime = duration;
+				return duration;
+			}
+			
+		]]>
+	</fx:Script>
+	
+</s:Application>

@@ -1,0 +1,1 @@
+WebSocket 支持的应用服务器：Resin 4.0以上版本、Tomcat7.0以上版本、Jetty

@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Canvas</title>
+    <meta name = "viewport" content = "width = device-width, user-scalable = no">
+</head>
+<body>
+<canvas id="canvas" width="500" height="500" style="border:solid 1px #ccc"></canvas>
+
+<button onclick="saveCanvas();">Save PNG</button>
+
+<img id="boardImg" src="" />
+</body>
+
+<script type="text/javascript" src="jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="canvasScript.js"></script>
+<script> 
+		 //这个是 刷新上 图像的        
+		function saveCanvas() {      
+			//实际运用可不写，测试代 ， 为单击拍照按钮就获取了当前图像，有其他用途    
+			var canvans = document.getElementById("canvas"); 
+			//获取浏览器页面的画布对象                       
+			//以下开始编 数据   
+			var imgData = canvans.toDataURL(); 
+			//将图像转换为base64数据
+			var base64Data = imgData.substr(22); 
+			//在前端截取22位之后的字符串作为图像数据       
+			$.post("http://192.168.1.184:8080/speechInput/saveImg", { "img": base64Data }, function (data, status) {      
+				 if (status == "success") {                 
+					if (data.length > 0) {               
+						$("#boardImg").attr("src","http://192.168.1.184/paizhao/img/" +　data);
+					} else {              
+						// alert(data);         
+					}          
+				} else {   
+					 alert("数据上 失败");                 
+				}
+			}, "text");           		
+		}
+</script>
+
+</html>

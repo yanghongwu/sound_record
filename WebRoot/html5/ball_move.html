@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html;charset=utf-8">
+	<title>html test</title>
+	<script type="text/javascript">
+		var canvas;
+		var context;
+		var xpos=50;
+		var ypos=50;
+		var speed=3;
+		var dirX=1;
+		var dirY=1;
+		
+		window.onload=init;
+		
+		function init(){
+			if(!!document.getElementById("shapes").getContext){
+				canvas = document.getElementById("shapes");
+				context = canvas.getContext("2d");
+				setInterval(animate,20);
+			} else {
+				alert("²»Ö§³Öcanvas");
+			}
+		}
+		
+		function drawBall(x,y){
+			context.beginPath();
+			context.arc(x,y,20,0,Math.PI*2,true);
+			context.fillStyle="red";
+			context.fill();
+		}
+		
+		function animate(){
+			clearContext();
+			if(xpos>=canvas.width-20||xpos<=20){
+				dirX*=-1;
+			}
+			if(ypos>=canvas.width-20||ypos<=20){
+				dirY*=-1;
+			}		
+			xpos+=speed*dirX;
+			ypos+=speed*dirY;
+			drawBall(xpos,ypos);
+		}
+		
+		function clearContext(){
+			context.clearRect(0,0,canvas.width,canvas.height);
+		}
+	</script>
+</head>
+<body>
+	<canvas id="shapes" width="500" height="500" style="border:solid 1px #ccc"></canvas>
+	
+	<button onclick="saveCanvas();">Save PNG</button>
+</body>

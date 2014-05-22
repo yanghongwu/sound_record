@@ -7,7 +7,7 @@
 <link media="screen" rel="stylesheet" href="css/jquery.ui.core.css" />
 <link media="screen" rel="stylesheet" href="css/jquery.ui.dialog.css" />
 <link href="css/layout.css" rel="stylesheet" type="text/css" />
-<link href="swf/audioRecord.css" rel="stylesheet" type="text/css" />
+<link href="recorder/audioRecord.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 	<div class="outwrapper">
@@ -291,8 +291,17 @@
 	</div>
 	<!--语音解答 end-->
 	<div id="audioRecordP" class="flashv2">
-		<div id="audioRecord">NOT SUPPORT	</div>
+		<div id="audioRecord">
+            <p>
+                To view this page ensure that Adobe Flash Player version 
+                11.1.0 or greater is installed. 
+            </p>
+            <a href='http://www.adobe.com/go/getflashplayer'>
+            	<img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' />
+            </a>            
+		</div>
 	</div>
+	<div id="checkFlashPlayerVersion" style="display:none"></div>
 </body>
 <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.custom.js"></script>
@@ -305,8 +314,8 @@
 <![endif]-->
 
 <script type="text/javascript" src="./swf/swfobject.js"></script>
-<script type="text/javascript" src="./swf/audioRecordLocal.js"></script>
-<script type="text/javascript" src="./swf/audioRecord.js"></script>
+<script type="text/javascript" src="./recorder/audioRecordLocal.js"></script>
+<script type="text/javascript" src="./recorder/audioRecord.js"></script>
 <script type="text/javascript">
 	
 	$(document).ready(function() {
@@ -320,11 +329,16 @@
 	
 	// 弹出语音提示框
 	function open_dialog(obj) {
+		if($("div[id='checkFlashPlayerVersion']").length > 0) {
+			$("#answerVoice").html($("div[id='audioRecord']").html());
+		}
 		stopInternalTimer();
+		
 		$('.recordTime').text(c+"\"");
 		if($("#answerVoice").parent().attr("class") == null) {
 			$("#answerVoice").parent().attr("class","ui-dialog ui-widget ui-widget-content ui-corner-all ui-draggable");
 		}
+		
 		obj.dialog('open');
 	}
 	
@@ -352,7 +366,7 @@
 			closeOnEscape: false,
 			close: function(event, ui) { 
 				if(eval(isHasError)) {
-					alert(getErrorMsg());
+					//alert(getErrorMsg());
 					return;
 				}
 				isCancelRecord = true;
@@ -385,19 +399,28 @@
 		$('.voice_player_inner').toggle(function() {
 			isPlaying = true;
 			Recorder.playbackData();
+			var totalTime = $('.second').text();
+			$('.second').attr("totalTime",totalTime);
+			
+			disRemainTimeOnPlayingMemIntervalId = setInterval(function () { displayRemainTimeOnPlayingMem(totalTime); }, 1000);
 		}, function() {
 			if(isPlaying) {
 				Recorder.stopPlaybackData();
 				isPlaying = false;
+				clearInterval(disRemainTimeOnPlayingMemIntervalId);
+				$('.second').text($('.second').attr("totalTime"));
 				return;
 			} 
+			
 			$('.voice_player_inner').click();
 		});
-		
+
 		// Call Audio
 		$('.voiceBtn').toggle(function() {
 			if(eval(isHasError)) {
 				alert(getErrorMsg());
+				$('#answerVoice').dialog('close');
+				$('.voiceBtn').click();
 				return;
 			}
 			initInternalTimer();
@@ -413,16 +436,14 @@
 			
 			$(this).removeClass("micNormal").addClass("micPress");
 			
-			if(!isFirstAccess) {  // 用户拒绝访问麦克风后，下次在执行录制时认为还是第一次；
+			if(!isFirstAccess) {  // 用户拒绝访问麦克风后，不刷新页面的情况下，再次在执行录制时认为还是第一次；
 				Recorder.startMicRecording();
 				allowAccessMicrophoneCallBackForFlash();
 			} else {
-				$(".voiceRecord").text("正在加载麦克风......");
-				timeoutID = setTimeout("startLazyRecording()",2000);
+				startLazyRecording();
 			}
 		}, function() {
 			if(eval(isHasError)) {
-				alert(getErrorMsg());
 				return;
 			}
 			if(isAutoStopRecording) {

@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<body>
+	当前录制音频：
+	<audio controls id="audioID"
+		src="http://192.168.1.163/audioTest/test.3gp"></audio>
+	<br> 上传之后音频：
+	<audio controls src="http://192.168.1.163/audioTest/test5.mp3"></audio>
+	
+	<video src="http://192.168.1.163/audioTest/VID_20140521_180703.3gp" id="fileToUpload2" controls></video>
+	
+	<script type="text/javascript" src="recorder.js"></script>
+	<br>
+	<input onclick="startRecording()" type="button" value="录制" />
+	<input onclick="stopRecording()" type="button" value="停止" />
+
+	<br>
+	<input type="file" accept="video/*" name="fileToUpload" id="fileToUpload">
+	<br>
+	<form id="form1" enctype="multipart/form-data" method="post">
+		<input type="button" onclick="uploadFile()" value="Upload" />
+	</form>
+	<script>
+
+		var onFail = function(e) {
+			console.log('Rejected!', e);
+		};
+
+		var onSuccess = function(s) {
+			window.AudioContext = window.webkitAudioContext;
+			var context;
+			try {
+				context = new window.AudioContext();
+				// 将声音流输入这个对象      
+				var audioInput = context.createMediaStreamSource(s);
+				
+				recorder = new Recorder(audioInput);
+			} catch (e) {
+				console.log('error....', e);
+				alert(e);
+			}
+
+			recorder.record();
+		}
+
+		window.URL = window.URL || window.webkitURL;
+		navigator.getUserMedia = navigator.getUserMedia
+				|| navigator.webkitGetUserMedia || navigator.mozGetUserMedia
+				|| navigator.msGetUserMedia;
+
+		var recorder;
+		var audio = vedioID.getElementById('audioID');
+
+		function startRecording() {
+			if (navigator.getUserMedia) {
+				navigator.getUserMedia({audio : true,video : false}, onSuccess, onFail);
+			} else {
+				alert('navigator.getUserMedia not present');
+				console.log('navigator.getUserMedia not present');
+			}
+		}
+
+		function stopRecording() {
+			recorder.stop();
+			recorder.exportWAV(function(s) {
+				audio.src = window.URL.createObjectURL(s);
+				handleFiles(s);
+			});
+		}
+
+		function handleFiles(files) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "http://192.168.1.163:8080/speechInput/saveAudio");
+			xhr.overrideMimeType("application/octet-stream");
+			//xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+			xhr.responseType = "blob";
+			xhr.send(files);
+		}
+
+		function uploadFile() {
+			var fd = new FormData();
+			fd.append("fileToUpload",
+					document.getElementById('fileToUpload').files[0]);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST",
+					"http://192.168.1.163:8080/speechInput/saveRecordAudio");
+			xhr.send(fd);
+			xhr.onreadystatechange = function() {
+	            var fileName = "";
+				if ( xhr.readyState == 4 && xhr.status ==200 ) {
+					fileName = xhr.responseText;
+	            }
+				var vedioID = document.getElementById("fileToUpload2");
+				vedioID.src = "http://192.168.1.163/audioTest/" + fileName;
+				alert(vedioID.src);
+	        }
+		}
+	</script>
+</body>
+</html>

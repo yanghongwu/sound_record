@@ -2,6 +2,7 @@ package fhy;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +19,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 /**
  * Servlet implementation class TestRecordFlashServlet
  */
-public class TestRecordFlashServlet extends HttpServlet {
+public class SaveHtml5RecordAudioServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -35,7 +36,6 @@ public class TestRecordFlashServlet extends HttpServlet {
 		diskFactory.setRepository(new File("d:/temp"));
 
 		ServletFileUpload upload = new ServletFileUpload(diskFactory);
-		upload.setSizeMax(4 * 1024 * 1024);
 		try {
 			List<FileItem> fileItems = upload.parseRequest(request);
 			Iterator<FileItem> iter = fileItems.iterator();
@@ -49,13 +49,19 @@ public class TestRecordFlashServlet extends HttpServlet {
 					if ("".equals(filename) && fileSize == 0) {
 						return;
 					}
-
-					File uploadFile = new File("D:/deploy/apache-tomcat-6.0.39/wtpwebapps/speechInput/demo_flash_wav/FlashRecord.mp3");
+					String filePath = "D:\\software\\Apache Software Foundation\\Apache2.2\\htdocs\\audioTest\\";
+					
+					File uploadFile = new File(filePath + item.getName());
 					if (!uploadFile.exists()) {
 						uploadFile.createNewFile();
 					}
 
 					item.write(uploadFile);
+					
+					response.setContentType("text/json;charset=UTF-8");
+					PrintWriter out = response.getWriter();
+					out.println(item.getName());
+					out.close();
 				}
 			}
 		} catch (Exception e) {

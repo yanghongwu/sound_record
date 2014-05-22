@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+var socket;
+function display() {
+	var valueLabel = document.getElementById("valueLabel");
+	valueLabel.innerHTML = "";
+	var ws = new WebSocket("ws://192.168.1.184:8080/websocket/MyServlet");
+
+	ws.onmessage = function(evt) {
+		valueLabel.innerHTML = valueLabel.innerHTML + " " + evt.data + "</br>";
+	}; 
+
+	ws.onclose = function(evt) {
+		valueLabel.innerHTML = "onClose";
+	}; 
+
+	ws.onopen = function() {
+		ws.send("Hello, All guys");
+	};
+	socket = ws;
+}
+
+window.onload=display;
+
+function say()
+{
+	var speak = document.getElementById("speak");
+	socket.send(speak.value);
+}
+
+
+</script>
+</head>
+<body>
+<span id="valueLabel"></span>
+
+<input type="text" id="speak">
+
+<button onclick="say()" type="button">Send</button>
+</body>
+</html>

@@ -1,2 +1,2 @@
 #!/bin/sh 
-lame -V 2  $1 $2
+lame -V 7  $1 $2

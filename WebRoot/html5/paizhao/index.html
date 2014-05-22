@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=GBK">
+<title>html test</title>
+<script type="text/javascript" src="jquery-2.1.1.min.js"></script>
+
+<script>     
+		//判断浏览器是否支持HTML5 Canvas           
+		window.onload = function () {    
+			 try {                   
+					//动态创建一个canvas元 ，并获取他2Dcontext。如果出现异常则表示不支持                   document.createElement("canvas").getContext("2d");        
+					document.getElementById("support").innerHTML = "浏览器支持HTML5 CANVAS";         
+			  }          
+			  catch (e) {           
+					document.getElementById("support").innerHTML = "浏览器不支持HTML5 CANVAS";       
+			  }                
+		};                
+		 //这段代 主要是获取摄像头的视频流并显示在Video 签中           
+		window.addEventListener("DOMContentLoaded", function () {            
+			var canvas = document.getElementById("canvas"),              
+			context = canvas.getContext("2d"),                
+			video = document.getElementById("video"),          
+			videoObj = { "video": true },             
+			errBack = function (error) {           
+				console.log("Video capture error: ", error.code);    
+			};    
+			
+			window.URL = window.URL || window.webkitURL;
+			navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+			var video = document.getElementById('video');
+			if (navigator.getUserMedia) {
+				navigator.getUserMedia({video: true}, function(stream) {
+					video.src = window.URL.createObjectURL(stream);
+					video.play();
+				}, errBack);
+			} else {
+				alert('您的浏览器不支持getUserMedia方法');
+			} 
+			
+			//这个是拍照按钮的事件，          
+			$("#snap").click(function () {          
+				context.drawImage(video, 0, 0, 320, 320);     
+				CatchCode();           
+			});           
+		}, false);           
+
+		 //这个是 刷新上 图像的        
+		function CatchCode() {      
+			//实际运用可不写，测试代 ， 为单击拍照按钮就获取了当前图像，有其他用途    
+			var canvans = document.getElementById("canvas"); 
+			//获取浏览器页面的画布对象                       
+			//以下开始编 数据   
+			var imgData = canvans.toDataURL(); 
+						
+			//将图像转换为base64数据
+			var base64Data = imgData.substr(22); 
+			//在前端截取22位之后的字符串作为图像数据       
+			$.post("http://192.168.1.184:8080/speechInput/saveImg", { "img": base64Data }, function (data, status) {      
+				 if (status == "success") {                 
+					if (data.length > 0) {               
+						//alert("二维 已经解析");           
+						$("#person").attr("src","http://192.168.1.184/paizhao/img/" +　data);
+					} else {              
+						// alert(data);         
+					}          
+				} else {   
+					 alert("数据上 失败");                 
+				}
+			}, "text");           		
+		}      
+	 </script>
+</head>
+<body>
+	<div id="contentHolder">
+		<video id="video" width="320" height="480" autoplay></video>
+		<img id="person" src="" />
+		<canvas style="display: none" id="canvas" width="320" height="480"></canvas>
+	</div>
+	<button id="snap">拍照</button>
+
+	<input type="file"  onchange="handleCarema()" accept="image/*" capture="camera" id="capture">
+
+	<div id="support"></div>
+
+</body>

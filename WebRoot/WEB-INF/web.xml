@@ -5,13 +5,21 @@
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
   <servlet>
-    <servlet-name>test</servlet-name>
+    <servlet-name>saveAudio</servlet-name>
     <servlet-class>fhy.TestRecordServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>test</servlet-name>
-    <url-pattern>/test</url-pattern>
+    <servlet-name>saveAudio</servlet-name>
+    <url-pattern>/saveAudio</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>saveRecordAudio</servlet-name>
+    <servlet-class>fhy.SaveHtml5RecordAudioServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>saveRecordAudio</servlet-name>
+    <url-pattern>/saveRecordAudio</url-pattern>
+  </servlet-mapping>  
   <servlet>
     <display-name>saveRecord</display-name>
     <servlet-name>saveRecord</servlet-name>
@@ -36,5 +44,13 @@
   <servlet-mapping>
     <servlet-name>uploadFhyMP3</servlet-name>
     <url-pattern>/uploadFhyMP3</url-pattern>
+  </servlet-mapping>    
+  <servlet>
+    <servlet-name>saveImg</servlet-name>
+    <servlet-class>fhy.SaveImgServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>saveImg</servlet-name>
+    <url-pattern>/saveImg</url-pattern>
   </servlet-mapping>    
 </web-app>

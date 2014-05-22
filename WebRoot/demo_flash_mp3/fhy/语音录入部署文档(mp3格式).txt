@@ -1,9 +1,9 @@
 1. 需要应用的js 、css文件
-<script type="text/javascript" src="./swf/swfobject.js"></script>
-<script type="text/javascript" src="./swf/audioRecord.js"></script>
-<script type="text/javascript" src="./swf/audioRecordLocal.js"></script>
+<script type="text/javascript" src="./recorder/swfobject.js"></script>
+<script type="text/javascript" src="./recorder/audioRecord.js"></script>
+<script type="text/javascript" src="./recorder/audioRecordLocal.js"></script>
 
-<link href="swf/audioRecord.css" rel="stylesheet" type="text/css" />
+<link href="recorder/audioRecord.css" rel="stylesheet" type="text/css" />
 
 2. JS需要实现的模板方法 在 audioRecordLoacl.js，命名统一为： xxxxForFlash() 
 

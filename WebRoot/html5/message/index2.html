@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+
+<head></head>
+<body>
+	<h2>PostMessage Sub Domain</h2>
+	<button id="sendStatus">Send Messsage</button>
+	<p> This is the message:
+	<input type="text" id="message" value="" style="width:350px"/>
+	</p>
+	<br />
+</body>
+<script type="text/javascript">
+	window.addEventListener("message",msgHandler,true);
+	var output = document.getElementById("result");
+	
+	var targetURL = 'http://www.swf.com:8080';
+
+	window.onload=function(){
+		if(typeof window.postMessage != 'undefined'){
+			//alert("The postMessage API is supported");
+		}
+		
+		document.getElementById('sendStatus').addEventListener("click",sendMsg,true);
+		//sendMsg(document.getElementById('message').value);
+	}
+
+	function sendMsg(){
+		messageTxt = document.getElementById('message').value;
+		window.top.postMessage(messageTxt,targetURL);
+		document.getElementById('message').value = "";
+	}
+
+	function msgHandler(e){
+		if(e.origin == targetURL) {
+			//document.getElementById('message').value = e.data;
+		} else {
+			alert('This message has been sent from an unknow domain: ' + e.origin);
+		}
+	}
+</script>
+
+</html>
